@@ -38,9 +38,9 @@ const Navbar = () => {
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#">
+              <NavLink to="/post" className="nav-link">
                 자유게시판
-              </a>
+              </NavLink>
             </li>
             <li className="nav-item">
               <a className="nav-link" href="#">
