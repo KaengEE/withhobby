@@ -33,9 +33,9 @@ const Navbar = () => {
               </NavLink>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#">
+              <NavLink to="/category" className="nav-link">
                 카테고리
-              </a>
+              </NavLink>
             </li>
             <li className="nav-item">
               <NavLink to="/post" className="nav-link">
