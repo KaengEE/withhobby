@@ -1,11 +1,22 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const Login = () => {
+const Join = () => {
   return (
     <div className="container my-5">
-      <h3>로그인</h3>
+      <h3>회원가입</h3>
       <form className="mt-5">
+        <div className="mb-3">
+          <label for="exampleInputEmail1" className="form-label">
+            이름
+          </label>
+          <input
+            type="email"
+            className="form-control"
+            id="exampleInputEmail1"
+            aria-describedby="emailHelp"
+          />
+        </div>
         <div className="mb-3">
           <label for="exampleInputEmail1" className="form-label">
             아이디
@@ -28,14 +39,14 @@ const Login = () => {
           />
         </div>
         <div className="form-text mb-3">
-          아이디가 없을 경우 → <Link to="/join">회원가입</Link>
+          아이디가 있을 경우 → <Link to="/login">로그인</Link>
         </div>
         <button type="submit" className="btn btn-primary">
-          로그인
+          회원가입
         </button>
       </form>
     </div>
   );
 };
 
-export default Login;
+export default Join;
