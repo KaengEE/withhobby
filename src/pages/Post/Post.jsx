@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Post = () => {
   return (
@@ -34,6 +35,11 @@ const Post = () => {
           </tr>
         </tbody>
       </table>
+      <div className="text-end">
+        <Link to="/createPost" className="btn btn-primary">
+          글쓰기
+        </Link>
+      </div>
       {/* 페이징 */}
       <nav aria-label="Page navigation example">
         <ul className="pagination justify-content-center">

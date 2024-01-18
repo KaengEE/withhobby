@@ -43,9 +43,9 @@ const Navbar = () => {
               </NavLink>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#">
+              <NavLink to="/join" className="nav-link">
                 회원가입
-              </a>
+              </NavLink>
             </li>
             <li className="nav-item">
               <NavLink to="/login" className="nav-link">
