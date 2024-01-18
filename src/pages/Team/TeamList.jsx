@@ -1,6 +1,5 @@
 import React from "react";
 import { Button, Card } from "react-bootstrap";
-import { Link } from "react-router-dom";
 import img from "../../assets/sample.jpg";
 
 const TeamList = () => {
