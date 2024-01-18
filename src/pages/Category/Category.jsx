@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Card } from "react-bootstrap";
 import img from "../../assets/sample.jpg";
+import { Link } from "react-router-dom";
 
 const Category = () => {
   return (
@@ -13,10 +14,13 @@ const Category = () => {
           <Card.Body>
             <Card.Title>그림</Card.Title>
             <div className="text-end">
-              <Button variant="primary">바로가기</Button>
+              <Link to="/teamList" className="btn btn-primary">
+                바로가기
+              </Link>
             </div>
           </Card.Body>
         </Card>
+        {/* 반복문으로처리 */}
         <Card style={{ width: "18rem" }}>
           <Card.Img variant="top" src={img} />
           <Card.Body>
