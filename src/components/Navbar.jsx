@@ -53,9 +53,9 @@ const Navbar = () => {
               </NavLink>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#">
+              <NavLink to="/mypage" className="nav-link">
                 마이페이지
-              </a>
+              </NavLink>
             </li>
             <li className="nav-item">
               <a className="nav-link" href="#">
