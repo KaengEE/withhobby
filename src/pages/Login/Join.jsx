@@ -15,9 +15,9 @@ const Join = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    //시작시 유저의 id가 있으면 profile페이지로 이동
+    //시작시 유저의 id가 있으면 mypage 이동
     if (currentUser?.id) {
-      navigate("/join");
+      navigate("/mypage");
     }
   }, []);
 
