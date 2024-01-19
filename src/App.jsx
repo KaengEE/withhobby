@@ -9,6 +9,8 @@ import Category from "./pages/Category/Category";
 import CreatePost from "./pages/Post/CreatePost";
 import TeamList from "./pages/Team/TeamList";
 import Mypage from "./pages/Mypage/Mypage";
+import NotFound from "./pages/UnAuthorized/NotFound";
+import UnAuthorized from "./pages/UnAuthorized/UnAuthorized";
 
 function App() {
   return (
@@ -27,6 +29,11 @@ function App() {
             {/* 부가 주소 */}
             <Route path="/createPost" element={<CreatePost />} />
             <Route path="/teamList" element={<TeamList />} />
+
+            {/* 오류 주소 */}
+            <Route path="/404" element={<NotFound />} />
+            <Route path="/401" element={<UnAuthorized />} />
+            <Route path="/*" element={<NotFound />} />
           </Routes>
         </div>
       </BrowserRouter>
