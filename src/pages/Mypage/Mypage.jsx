@@ -7,6 +7,7 @@ import "./Mypage.css";
 import MypageModal from "./MypageModal";
 import userService from "../../services/user.service";
 import { storage } from "../../firebase";
+import { setCurrentUser } from "../../store/actions/user";
 
 const Mypage = () => {
   const currentUser = useSelector((state) => state.user); //현재유저
@@ -60,11 +61,15 @@ const Mypage = () => {
     if (!currentUser) return;
 
     // 프로필 업데이트
-    await userService.updateProfile({
-      ...currentUser,
-      name: newName,
-      userProfile: newAvatar, // 이미지 URL 추가
-    });
+    await userService
+      .updateProfile({
+        ...currentUser,
+        name: newName,
+        userProfile: newAvatar, // 이미지 URL 추가
+      }) //프로필 이미지 DB에서 가져오기
+      .then((res) => {
+        setCurrentUser({ ...res.data, userProfile: newAvatar });
+      });
 
     // 새로운 프로필 사진이 선택되었을 경우만 업데이트
     if (newAvatar !== currentUser.userProfile) {
