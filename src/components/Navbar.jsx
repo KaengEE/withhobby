@@ -1,6 +1,19 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { clearCurrentUser } from "../store/actions/user";
 
 const Navbar = () => {
+  const currentUser = useSelector((state) => state.user);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  //로그아웃
+  const logout = () => {
+    dispatch(clearCurrentUser());
+    navigate("/login");
+  };
+
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container-fluid">
@@ -42,26 +55,36 @@ const Navbar = () => {
                 자유게시판
               </NavLink>
             </li>
-            <li className="nav-item">
-              <NavLink to="/join" className="nav-link">
-                회원가입
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink to="/login" className="nav-link">
-                로그인
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink to="/mypage" className="nav-link">
-                마이페이지
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#">
-                로그아웃
-              </a>
-            </li>
+            {/* 비로그인 */}
+            {!currentUser && (
+              <>
+                <li className="nav-item">
+                  <NavLink to="/join" className="nav-link">
+                    회원가입
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink to="/login" className="nav-link">
+                    로그인
+                  </NavLink>
+                </li>
+              </>
+            )}
+            {/* 로그인 */}
+            {currentUser && (
+              <>
+                <li className="nav-item">
+                  <NavLink to="/mypage" className="nav-link">
+                    마이페이지
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="#" onClick={logout}>
+                    로그아웃
+                  </a>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </div>
