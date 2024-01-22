@@ -58,7 +58,12 @@ const TeamList = () => {
                 <Card.Text>{teamItem.teamTitle}</Card.Text>
                 <div className="text-end">
                   <Card.Text>HOST :{teamItem.teamHost.username}👑</Card.Text>
-                  <Button variant="primary">바로가기</Button>
+                  <Link
+                    to={`/team/detail/${teamItem.id}`}
+                    className="btn btn-primary"
+                  >
+                    더 알아보기
+                  </Link>
                 </div>
               </Card.Body>
             </Card>
