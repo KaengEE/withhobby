@@ -32,25 +32,29 @@ const Category = () => {
           카테고리 추가
         </Link>
       </div>
-      <div className="d-flex flex-wrap gap-3 mt-3">
-        {/* 카테고리 리스트 */}
-        {category.map((categoryItem) => (
-          <Card key={categoryItem.id} style={{ width: "18rem" }}>
-            <Card.Body>
-              <Card.Title>{categoryItem.category}</Card.Title>
-              <div className="text-end">
-                {/* 링크 또는 버튼에 대한 작업 수행 */}
-                <Link
-                  to={`/team/${categoryItem.id}`}
-                  className="btn btn-primary"
-                >
-                  바로가기
-                </Link>
-              </div>
-            </Card.Body>
-          </Card>
-        ))}
-      </div>
+      {category.length === 0 ? (
+        <p>No categories available.</p>
+      ) : (
+        <div className="d-flex flex-wrap gap-3 mt-3">
+          {/* 카테고리 리스트 */}
+          {category.map((categoryItem) => (
+            <Card key={categoryItem.id} style={{ width: "18rem" }}>
+              <Card.Body>
+                <Card.Title>{categoryItem.category}</Card.Title>
+                <div className="text-end">
+                  {/* 링크 또는 버튼에 대한 작업 수행 */}
+                  <Link
+                    to={`/team/${categoryItem.id}`}
+                    className="btn btn-primary"
+                  >
+                    바로가기
+                  </Link>
+                </div>
+              </Card.Body>
+            </Card>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
