@@ -47,7 +47,12 @@ const TeamList = () => {
         <div className="d-flex flex-wrap gap-3 mt-3">
           {teamList.map((teamItem) => (
             <Card key={teamItem.id} style={{ width: "18rem" }}>
-              <Card.Img variant="top" src={img} />
+              <Card.Img
+                variant="top"
+                src={teamItem.teamImg}
+                className="w-100 h-50"
+              />
+
               <Card.Body>
                 <Card.Title>{teamItem.teamname}</Card.Title>
                 <Card.Text>{teamItem.teamTitle}</Card.Text>
