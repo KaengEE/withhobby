@@ -28,7 +28,7 @@ function App() {
             <Route path="/mypage" element={<Mypage />} />
             {/* 부가 주소 */}
             <Route path="/createPost" element={<CreatePost />} />
-            <Route path="/teamList" element={<TeamList />} />
+            <Route path="/team/:categoryId" element={<TeamList />} />
 
             {/* 오류 주소 */}
             <Route path="/404" element={<NotFound />} />

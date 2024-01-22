@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Card } from "react-bootstrap";
-import img from "../../assets/sample.jpg";
 import { Link } from "react-router-dom";
 import categoryService from "../../services/category.service";
+import TeamList from "../Team/TeamList";
 
 const Category = () => {
   const [category, setCategory] = useState([]); //카테고리 리스트
