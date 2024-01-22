@@ -22,7 +22,7 @@ const Login = () => {
   //입력메서드
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(name, value);
+    //console.log(name, value);
     setUser((prevState) => {
       return {
         ...prevState,
