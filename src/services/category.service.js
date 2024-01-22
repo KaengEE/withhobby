@@ -17,6 +17,12 @@ class CategoryService {
       { headers: authHeader() }
     );
   }
+  //카테고리 이름 조회
+  getCategoryName(categoryId) {
+    return axios.get(`${API_URL}/name/${categoryId}`, {
+      headers: authHeader(),
+    });
+  }
 }
 
 const categoryService = new CategoryService();
