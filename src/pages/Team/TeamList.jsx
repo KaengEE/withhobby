@@ -30,7 +30,7 @@ const TeamList = () => {
     fetchTeamList();
   }, [categoryId]);
 
-  console.log(categoryId);
+  //console.log(categoryId);
 
   return (
     <div className="container mt-4">
