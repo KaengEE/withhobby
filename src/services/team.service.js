@@ -17,6 +17,12 @@ class TeamService {
       headers: authHeader(),
     });
   }
+  //팀조회
+  getTeamDetail(teamId) {
+    return axios.get(`${API_URL}/detail/${teamId}`, {
+      headers: authHeader(),
+    });
+  }
 }
 
 const teamService = new TeamService();
