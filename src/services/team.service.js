@@ -11,6 +11,12 @@ class TeamService {
       headers: authHeader(),
     });
   }
+  // 팀 생성
+  createTeam(teamForm) {
+    return axios.post(`${API_URL}/create`, teamForm, {
+      headers: authHeader(),
+    });
+  }
 }
 
 const teamService = new TeamService();

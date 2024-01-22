@@ -23,6 +23,12 @@ class CategoryService {
       headers: authHeader(),
     });
   }
+  //카테고리 id 찾기
+  getCategoryId(categoryName) {
+    return axios.get(`${API_URL}/${categoryName}`, {
+      headers: authHeader(),
+    });
+  }
 }
 
 const categoryService = new CategoryService();

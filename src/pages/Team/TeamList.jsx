@@ -30,13 +30,17 @@ const TeamList = () => {
     fetchTeamList();
   }, [categoryId]);
 
-  //console.log(teamList);
+  console.log(categoryId);
 
   return (
     <div className="container mt-4">
       <Link to="/category"> ◀ 이전 페이지</Link>
       <h2 className="mt-4">{categoryName}</h2>
-
+      <div className="text-end my-3">
+        <Link to="/team/create" className="btn btn-info">
+          팀 만들기
+        </Link>
+      </div>
       {teamList.length === 0 ? (
         <p>아직 팀이 없습니다.</p>
       ) : (
