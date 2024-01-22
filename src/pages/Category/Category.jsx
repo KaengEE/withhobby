@@ -11,7 +11,9 @@ const Category = () => {
     const categoryList = async () => {
       try {
         const response = await categoryService.getList();
-        setCategory(response.data);
+        //id 오름차순
+        const sortedCategories = response.data.sort((a, b) => a.id - b.id);
+        setCategory(sortedCategories);
         //console.log(response.data);
       } catch (error) {
         console.error("리스트를 가져오는데 오류 발생:", error);
