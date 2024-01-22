@@ -11,6 +11,7 @@ import TeamList from "./pages/Team/TeamList";
 import Mypage from "./pages/Mypage/Mypage";
 import NotFound from "./pages/UnAuthorized/NotFound";
 import UnAuthorized from "./pages/UnAuthorized/UnAuthorized";
+import CreateCategory from "./pages/Category/CreateCategory";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
             {/* 부가 주소 */}
             <Route path="/createPost" element={<CreatePost />} />
             <Route path="/team/:categoryId" element={<TeamList />} />
+            <Route path="/createCategory" element={<CreateCategory />} />
 
             {/* 오류 주소 */}
             <Route path="/404" element={<NotFound />} />

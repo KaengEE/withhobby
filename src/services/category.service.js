@@ -9,6 +9,14 @@ class CategoryService {
   getList() {
     return axios.get(`${API_URL}/list`, { headers: authHeader() });
   }
+  //카테고리 생성
+  createCategory(categoryName) {
+    return axios.post(
+      `${API_URL}/create`,
+      { category: categoryName },
+      { headers: authHeader() }
+    );
+  }
 }
 
 const categoryService = new CategoryService();

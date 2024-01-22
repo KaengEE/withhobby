@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import categoryService from "../../services/category.service";
-import TeamList from "../Team/TeamList";
 
 const Category = () => {
   const [category, setCategory] = useState([]); //카테고리 리스트
@@ -13,7 +12,7 @@ const Category = () => {
       try {
         const response = await categoryService.getList();
         setCategory(response.data);
-        console.log(response.data);
+        //console.log(response.data);
       } catch (error) {
         console.error("리스트를 가져오는데 오류 발생:", error);
       }
@@ -27,7 +26,7 @@ const Category = () => {
       <h2>카테고리</h2>
       {/* ROLE ADMIN에게만 보이게하기 */}
       <div className="text-end mx-3">
-        <Link to="/create" className="btn btn-primary mb-3">
+        <Link to="/createCategory" className="btn btn-primary mb-3">
           카테고리 추가
         </Link>
       </div>
