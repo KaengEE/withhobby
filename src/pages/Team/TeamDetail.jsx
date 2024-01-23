@@ -2,15 +2,15 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import teamService from "../../services/team.service";
 import { useSelector } from "react-redux";
-import { Button } from "react-bootstrap";
+import { Button, Image, Container, Row, Col, Accordion, Card } from "react-bootstrap";
 import memberService from "../../services/member.service";
 
 const TeamDetail = () => {
-  const { teamId } = useParams(); // 비구조화 할당
+  const { teamId } = useParams();
   const [team, setTeam] = useState();
-  const currentUser = useSelector((state) => state.user); //현재유저
+  const currentUser = useSelector((state) => state.user);
   const navigate = useNavigate();
-  const [member, setMember] = useState([]); //멤버리스트
+  const [member, setMember] = useState([]);
 
   const fetchMemberList = async () => {
     try {
@@ -24,7 +24,6 @@ const TeamDetail = () => {
   useEffect(() => {
     const fetchTeamDetail = async () => {
       try {
-        // teamId로 team 내용 조회하기
         const response = await teamService.getTeamDetail(teamId);
         setTeam(response.data);
       } catch (error) {
@@ -39,29 +38,23 @@ const TeamDetail = () => {
   const handleJoinTeam = async () => {
     try {
       const response = await memberService.joinTeam(teamId);
-      //console.log(response.data);
-      //console.log("Status Code:", response.status);
       alert(response.data);
-      //가입후 리스트 다시 불러오기
       fetchMemberList();
     } catch (error) {
       console.error("가입실패:", error);
       if (error.response && error.response.data) {
-        // 실패시 알림창
         const errorMessage = error.response.data;
         alert(`가입 실패: ${errorMessage}`);
       }
     }
   };
 
-  //팀 탈퇴
   const handleRemoveMember = async () => {
     const confirm = window.confirm("정말로 탈퇴하시겠습니까?");
     
     if (confirm) {
-      // 같은 유저여야 삭제
       const isCurrentUserMember = member.some((m) => m.username === currentUser.username);
-  
+
       if (isCurrentUserMember) {
         try {
           await memberService.removeMember(teamId, currentUser.username);
@@ -77,50 +70,61 @@ const TeamDetail = () => {
   };
 
   return (
-    <>
-      <div>
-        <Button
-          onClick={() => {
-            navigate(-1);
-          }}
-        >
-          이전으로
-        </Button>
-        <img src={team?.teamImg} alt="팀 이미지" />
-        <h3>{team?.teamname}</h3>
-        <h5>{team?.teamTitle}</h5>
-        <div>
-          <p>Host: {team?.teamHost.name}</p>
-        </div>
-        {/* 팀 가입하기 */}
-        <Button onClick={handleJoinTeam}>가입</Button>
-
-        {/* 팀 탈퇴하기 - 팀멤버id와 자신의 id가 동일할때 보임 */}
-        {member.some((m) => m.username === currentUser.username) && (
-          <Button className="btn btn-danger" onClick={handleRemoveMember}>
-            탈퇴
+    <Container>
+      <Row className="mt-3">
+        <Col>
+          <Button onClick={() => navigate(-1)} variant="outline-secondary">
+            이전으로
           </Button>
-        )}
-
-        {/* 현재유저와 hostId가 같아야 수정가능 */}
-        {currentUser.id == team?.teamHost.id && (
-          <Link to={`/team/update/${teamId}`}>수정</Link>
-        )}
-      </div>
-      {/* 팀멤버 */}
-      <div>
-        <h4>팀 멤버</h4>
-        {member.length > 0 ? (
-          <ul>
-            {member.map((members) => (
-              <li key={members.id}>{members.username}</li>
-            ))}
-          </ul>
-        ) : (
-          <p>아직 멤버가 없습니다.</p>
-        )}
-      </div>
-    </>
+        </Col>
+      </Row>
+      <Row className="mt-3">
+        <Col>
+          <Image src={team?.teamImg} alt="팀 이미지" fluid />
+        </Col>
+        <Col>
+          <h3>{team?.teamname}</h3>
+          <h5>{team?.teamTitle}</h5>
+          <p>Host: {team?.teamHost.name}</p>
+          <Button onClick={handleJoinTeam} variant="primary" className="mr-2">
+            가입
+          </Button>
+          {member.some((m) => m.username === currentUser.username) && (
+            <Button onClick={handleRemoveMember} variant="danger">
+              탈퇴
+            </Button>
+          )}
+          {currentUser.id === team?.teamHost.id && (
+            <Link to={`/team/update/${teamId}`} className="btn btn-outline-secondary ml-2">
+              수정
+            </Link>
+          )}
+        </Col>
+      </Row>
+      <Row className="mt-3">
+        <Col>
+          {member.length > 0 ? (
+            <div className="container">
+              <Accordion defaultActiveKey="1" className="ms-auto" style={{width:'300px'}}>
+                <Accordion.Item eventKey="0">
+                  <Accordion.Header>팀멤버</Accordion.Header>
+                  <Accordion.Body>
+                    {/* 멤버 리스트 */}
+                    <ul>
+                      {member.map((m) => (
+                        <li key={m.id}>{m.username}</li>
+                      ))}
+                    </ul>
+                  </Accordion.Body>
+                </Accordion.Item>
+              </Accordion>
+            </div>
+          ) : (
+            <p>아직 멤버가 없습니다.</p>
+          )}
+        </Col>
+      </Row>
+    </Container>
   );
 };
 
