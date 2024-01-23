@@ -18,10 +18,22 @@ class CommentService {
   }
 
   //댓글 수정
+  updateComment(commentId, updateData) {
+    return axios.put(`${API_URL}/update/${commentId}`, updateData, {
+      headers: authHeader(),
+    });
+  }
 
   //댓글 삭제
   removeComment(commentId) {
     return axios.delete(`${API_URL}/delete/${commentId}`, {
+      headers: authHeader(),
+    });
+  }
+
+  //댓글찾기
+  getComment(commentId) {
+    return axios.get(`${API_URL}/find/${commentId}`, {
       headers: authHeader(),
     });
   }

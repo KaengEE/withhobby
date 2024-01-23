@@ -4,6 +4,7 @@ import postService from "../../services/post.service";
 import { Button, Form } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import commentService from "../../services/comment.service";
+import CommentEdit from "../Comment/CommentEdit";
 
 const PostDetail = () => {
   const { postId } = useParams();
@@ -12,6 +13,9 @@ const PostDetail = () => {
   const [commentText, setCommentText] = useState(""); // 댓글 입력 상태 추가
   const navigate = useNavigate();
   const currentUser = useSelector((state) => state.user);
+  // 수정모달창
+  const [showCommentEditModal, setShowCommentEditModal] = useState(false);
+  const [selectedComment, setSelectedComment] = useState(null);
 
   useEffect(() => {
     const fetchPostDetail = async () => {
@@ -83,6 +87,27 @@ const PostDetail = () => {
         console.error("삭제오류:", error);
       }
     }
+  };
+
+  //수정 모달창
+
+  const handleShowCommentEditModal = (comment) => {
+    setSelectedComment(comment);
+    setShowCommentEditModal(true);
+  };
+
+  const handleCloseCommentEditModal = () => {
+    setSelectedComment(null);
+    setShowCommentEditModal(false);
+  };
+
+  const handleUpdateComment = async (updatedCommentText, comment) => {
+    await commentService.updateComment(comment, {
+      text: updatedCommentText,
+    });
+    //수정후 목록다시 불러오기
+    const response = await commentService.getComments(postId);
+    setComments(response.data);
   };
 
   return (
@@ -159,13 +184,28 @@ const PostDetail = () => {
                   >
                     삭제
                   </Button>
-                  <Button className="btn btn-primary">수정</Button>
+                  <Button
+                    className="btn btn-primary"
+                    onClick={() => handleShowCommentEditModal(comment.id)}
+                  >
+                    수정
+                  </Button>
                 </div>
               )}
             </div>
           ))
         ) : (
           <p className="card-body">댓글이 없습니다.</p>
+        )}
+
+        {/* 댓글 수정 모달 */}
+        {selectedComment && (
+          <CommentEdit
+            show={showCommentEditModal}
+            handleClose={handleCloseCommentEditModal}
+            comment={selectedComment}
+            handleUpdateComment={handleUpdateComment}
+          />
         )}
 
         {/* 댓글 작성 폼 */}
