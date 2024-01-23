@@ -11,6 +11,12 @@ class MemberService {
       headers: authHeader(),
     });
   }
+  //팀의 멤버 조회
+  getMember(teamId) {
+    return axios.get(`${API_URL}/${teamId}`, {
+      headers: authHeader(),
+    });
+  }
 }
 
 const memberService = new MemberService();
