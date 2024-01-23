@@ -12,6 +12,15 @@ const TeamDetail = () => {
   const navigate = useNavigate();
   const [member, setMember] = useState([]); //멤버리스트
 
+  const fetchMemberList = async () => {
+    try {
+      const response = await memberService.getMember(teamId);
+      setMember(response.data);
+    } catch (error) {
+      console.error("팀 리스트를 불러오는데 오류 발생:", error);
+    }
+  };
+
   useEffect(() => {
     const fetchTeamDetail = async () => {
       try {
@@ -23,15 +32,6 @@ const TeamDetail = () => {
       }
     };
 
-    const fetchMemberList = async () => {
-      try {
-        const response = await memberService.getMember(teamId);
-        setMember(response.data);
-      } catch (error) {
-        console.error("팀 리스트를 불러오는데 오류 발생:", error);
-      }
-    };
-
     fetchTeamDetail();
     fetchMemberList();
   }, [teamId]);
@@ -39,8 +39,11 @@ const TeamDetail = () => {
   const handleJoinTeam = async () => {
     try {
       const response = await memberService.joinTeam(teamId);
-      console.log(response.data);
+      //console.log(response.data);
       //console.log("Status Code:", response.status);
+      alert(response.data);
+      //가입후 리스트 다시 불러오기
+      fetchMemberList();
     } catch (error) {
       console.error("가입실패:", error);
       if (error.response && error.response.data) {
@@ -69,6 +72,10 @@ const TeamDetail = () => {
         </div>
         {/* 팀 가입하기 */}
         <Button onClick={handleJoinTeam}>가입</Button>
+
+         {/*팀 탈퇴하기 - 팀멤버id와 자신의 id가 동일할때 보임*/}
+         <Button className="btn btn-danger">탈퇴</Button>
+
         {/* 현재유저와 hostId가 같아야 수정가능 */}
         {currentUser.id == team?.teamHost.id && (
           <Link to={`/team/update/${teamId}`}>수정</Link>
