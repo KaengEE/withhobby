@@ -15,7 +15,6 @@ import CreateCategory from "./pages/Category/CreateCategory";
 import CreateTeam from "./pages/Team/CreateTeam";
 import TeamDetail from "./pages/Team/TeamDetail";
 import EditTeam from "./pages/Team/EditTeam";
-import JoinTeam from "./pages/Team/JoinTeam";
 
 function App() {
   return (

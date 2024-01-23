@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import categoryService from "../../services/category.service";
+import { useSelector } from "react-redux";
 
 const Category = () => {
   const [category, setCategory] = useState([]); //카테고리 리스트
+  const currentUser = useSelector((state) => state.user);
 
   useEffect(() => {
     // 컴포넌트가 마운트되면 카테고리 리스트를 불러오기
@@ -27,11 +29,14 @@ const Category = () => {
     <div className="container mt-4">
       <h2>카테고리</h2>
       {/* ROLE ADMIN에게만 보이게하기 */}
-      <div className="text-end mx-3">
-        <Link to="/createCategory" className="btn btn-primary mb-3">
-          카테고리 추가
-        </Link>
-      </div>
+      {currentUser.role == "ADMIN" && (
+        <div className="text-end mx-3">
+          <Link to="/createCategory" className="btn btn-primary mb-3">
+            카테고리 추가
+          </Link>
+        </div>
+      )}
+
       {category.length === 0 ? (
         <p>No categories available.</p>
       ) : (
