@@ -37,13 +37,25 @@ const PostDetail = () => {
   }, [postId]);
 
   const removePost = async () => {
-    await postService.deletePost(postId);
-    navigate("/post");
+    // 확인 창을 띄움
+    const confirmDelete = window.confirm("정말로 삭제하시겠습니까?");
+
+    if (confirmDelete) {
+      await postService.deletePost(postId);
+      navigate("/post");
+    }
   };
 
   // 댓글관련
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
+
+    // commentText가 비어 있는지 확인
+    if (!commentText.trim()) {
+      alert("댓글 내용을 입력하세요.");
+      return;
+    }
+
     try {
       await commentService.createComment(postId, { text: commentText });
       setCommentText(""); // 댓글 입력 후 초기화
@@ -55,7 +67,23 @@ const PostDetail = () => {
     }
   };
 
-  //console.log(comments);
+  // 삭제 버튼 클릭 시 호출되는 함수
+  const handleDeleteComment = async (commentId) => {
+    // 확인 창을 띄움
+    const confirmDelete = window.confirm("정말로 삭제하시겠습니까?");
+
+    if (confirmDelete) {
+      try {
+        // 삭제 확인되면 댓글 삭제
+        await commentService.removeComment(commentId);
+        // 댓글 삭제 후 댓글 목록을 다시 불러옴
+        const response = await commentService.getComments(postId);
+        setComments(response.data);
+      } catch (error) {
+        console.error("삭제오류:", error);
+      }
+    }
+  };
 
   return (
     <div className="container mt-5">
@@ -124,7 +152,13 @@ const PostDetail = () => {
               {/* 작성자만 보이게 */}
               {currentUser.id === comment.user.id && (
                 <div className="ms-auto me-3">
-                  <Button className="btn btn-danger me-2">삭제</Button>
+                  {/* 수정/삭제 버튼 클릭 시 해당 댓글의 commentId를 전달 */}
+                  <Button
+                    className="btn btn-danger me-2"
+                    onClick={() => handleDeleteComment(comment.id)}
+                  >
+                    삭제
+                  </Button>
                   <Button className="btn btn-primary">수정</Button>
                 </div>
               )}

@@ -16,6 +16,15 @@ class CommentService {
   getComments(postId) {
     return axios.get(`${API_URL}/${postId}`, { headers: authHeader() });
   }
+
+  //댓글 수정
+
+  //댓글 삭제
+  removeComment(commentId) {
+    return axios.delete(`${API_URL}/delete/${commentId}`, {
+      headers: authHeader(),
+    });
+  }
 }
 
 const commentService = new CommentService();
