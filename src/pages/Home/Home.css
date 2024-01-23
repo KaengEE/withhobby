@@ -1,0 +1,24 @@
+.banner-image {
+    width: 100%;
+    height: auto;
+    max-width: fit-content;
+  }
+  
+  .btn-on-image {
+    position: absolute;
+    top: 70%;
+    left: 80%;
+    transform: translate(-50%, -50%);
+    background-color: rebeccapurple;
+    border-color: rebeccapurple;
+    color: white;
+  }
+  .btn-on-image:hover {
+    background-color: rgb(72, 0, 144);
+    border-color: rgb(72, 0, 144);
+    color: white;
+  }
+
+  .main-title{
+    font-weight: bold;
+  }
