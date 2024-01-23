@@ -16,6 +16,7 @@ import CreateTeam from "./pages/Team/CreateTeam";
 import TeamDetail from "./pages/Team/TeamDetail";
 import EditTeam from "./pages/Team/EditTeam";
 import PostDetail from "./pages/Post/PostDetail";
+import EditPost from "./pages/Post/EditPost";
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
             <Route path="/team/detail/:teamId" element={<TeamDetail />} />
             <Route path="/team/update/:teamId" element={<EditTeam />} />
             <Route path="/post/detail/:postId" element={<PostDetail />} />
+            <Route path="/post/edit/:postId" element={<EditPost />} />
 
             {/* 오류 주소 */}
             <Route path="/404" element={<NotFound />} />

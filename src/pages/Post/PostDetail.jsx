@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import postService from "../../services/post.service";
 import { Button } from "react-bootstrap";
 import { useSelector } from "react-redux";
@@ -33,7 +33,7 @@ const PostDetail = () => {
     <div className="container mt-5">
       <Button
         onClick={() => {
-          navigate(-1);
+          navigate("/post");
         }}
       >
         이전으로
@@ -65,7 +65,9 @@ const PostDetail = () => {
               <Button className="btn-danger mx-2" onClick={removePost}>
                 삭제
               </Button>
-              <Button>수정</Button>
+              <Link to={`/post/edit/${postId}`} className="btn btn-primary">
+                수정
+              </Link>
             </div>
           )}
         </>

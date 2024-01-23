@@ -21,7 +21,11 @@ class PostService {
     return axios.get(`${API_URL}/${postId}`, { headers: authHeader() });
   }
   // 게시글 수정
-
+  updatePost(postId, updatedData) {
+    return axios.put(`${API_URL}/update/${postId}`, updatedData, {
+      headers: authHeader(),
+    });
+  }
   // 게시글 삭제
   deletePost(postId) {
     return axios.delete(`${API_URL}/delete/${postId}`, {
