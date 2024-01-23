@@ -17,6 +17,16 @@ class MemberService {
       headers: authHeader(),
     });
   }
+// 팀 탈퇴하기
+removeMember(teamId, username) {
+  return axios.delete(`${API_URL}/delete`, {
+    params: {
+      teamId: teamId,
+      username: username,
+    },
+    headers: authHeader(),
+  });
+}
 }
 
 const memberService = new MemberService();

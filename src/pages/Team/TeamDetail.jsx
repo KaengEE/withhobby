@@ -54,6 +54,28 @@ const TeamDetail = () => {
     }
   };
 
+  //팀 탈퇴
+  const handleRemoveMember = async () => {
+    const confirm = window.confirm("정말로 탈퇴하시겠습니까?");
+    
+    if (confirm) {
+      // 같은 유저여야 삭제
+      const isCurrentUserMember = member.some((m) => m.username === currentUser.username);
+  
+      if (isCurrentUserMember) {
+        try {
+          await memberService.removeMember(teamId, currentUser.username);
+          fetchMemberList();
+          navigate(`/team/detail/${teamId}`);
+        } catch (error) {
+          console.error("멤버 삭제 중 에러 발생:", error);
+        }
+      } else {
+        alert("현재 로그인한 유저와 삭제할 멤버의 유저가 일치하지 않습니다.");
+      }
+    }
+  };
+
   return (
     <>
       <div>
@@ -73,8 +95,12 @@ const TeamDetail = () => {
         {/* 팀 가입하기 */}
         <Button onClick={handleJoinTeam}>가입</Button>
 
-         {/*팀 탈퇴하기 - 팀멤버id와 자신의 id가 동일할때 보임*/}
-         <Button className="btn btn-danger">탈퇴</Button>
+        {/* 팀 탈퇴하기 - 팀멤버id와 자신의 id가 동일할때 보임 */}
+        {member.some((m) => m.username === currentUser.username) && (
+          <Button className="btn btn-danger" onClick={handleRemoveMember}>
+            탈퇴
+          </Button>
+        )}
 
         {/* 현재유저와 hostId가 같아야 수정가능 */}
         {currentUser.id == team?.teamHost.id && (
