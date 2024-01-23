@@ -23,6 +23,10 @@ class TeamService {
       headers: authHeader(),
     });
   }
+  //팀수정
+  updateTeam() {
+    return axios.put(`${API_URL}/update`, { headers: authHeader() });
+  }
 }
 
 const teamService = new TeamService();
