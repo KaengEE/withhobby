@@ -15,6 +15,7 @@ import CreateCategory from "./pages/Category/CreateCategory";
 import CreateTeam from "./pages/Team/CreateTeam";
 import TeamDetail from "./pages/Team/TeamDetail";
 import EditTeam from "./pages/Team/EditTeam";
+import JoinTeam from "./pages/Team/JoinTeam";
 
 function App() {
   return (
@@ -37,7 +38,6 @@ function App() {
             <Route path="/team/create" element={<CreateTeam />} />
             <Route path="/team/detail/:teamId" element={<TeamDetail />} />
             <Route path="/team/update/:teamId" element={<EditTeam />} />
-
             {/* 오류 주소 */}
             <Route path="/404" element={<NotFound />} />
             <Route path="/401" element={<UnAuthorized />} />

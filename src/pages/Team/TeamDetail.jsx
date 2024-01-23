@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import teamService from "../../services/team.service";
 import { useSelector } from "react-redux";
 import { Button } from "react-bootstrap";
+import memberService from "../../services/member.service";
 
 const TeamDetail = () => {
   const { teamId } = useParams(); // 비구조화 할당
@@ -13,7 +14,8 @@ const TeamDetail = () => {
   useEffect(() => {
     const fetchTeamDetail = async () => {
       try {
-        const response = await teamService.getTeamDetail(parseInt(teamId, 10));
+        // teamId로 team 내용 조회하기
+        const response = await teamService.getTeamDetail(teamId);
         setTeam(response.data);
       } catch (error) {
         console.error("팀 정보를 불러오는데 오류 발생:", error);
@@ -23,11 +25,21 @@ const TeamDetail = () => {
     fetchTeamDetail();
   }, [teamId]);
 
-  // console.log(team);
-  // console.log(team?.teamHost.id);
-  // console.log(currentUser);
+  const handleJoinTeam = async () => {
+    try {
+      const response = await memberService.joinTeam(teamId);
+      console.log(response.data);
+      //console.log("Status Code:", response.status);
+    } catch (error) {
+      console.error("가입실패:", error);
+      if (error.response && error.response.data) {
+        // 실패시 알림창
+        const errorMessage = error.response.data;
+        alert(`가입 실패: ${errorMessage}`);
+      }
+    }
+  };
 
-  // teamId로 team 내용 조회하기
   return (
     <div>
       <Button
@@ -43,6 +55,8 @@ const TeamDetail = () => {
       <div>
         <p>Host: {team?.teamHost.name}</p>
       </div>
+      {/* 팀 가입하기 */}
+      <Button onClick={handleJoinTeam}>가입</Button>
       {/* 현재유저와 hostId가 같아야 수정가능 */}
       {currentUser.id == team?.teamHost.id && (
         <Link to={`/team/update/${teamId}`}>수정</Link>
