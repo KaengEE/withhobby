@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import postService from "../../services/post.service";
 import { Button } from "react-bootstrap";
+import { useSelector } from "react-redux";
 
 const PostDetail = () => {
   const { postId } = useParams();
   const [post, setPost] = useState();
   const navigate = useNavigate();
+  const currentUser = useSelector((state) => state.user); //현재유저
 
   useEffect(() => {
     // 게시글 상세조회 함수 호출
@@ -22,7 +24,10 @@ const PostDetail = () => {
     fetchPostDetail(); // useEffect에서 호출
   }, [postId]);
 
-  console.log(post);
+  const removePost = async () => {
+    await postService.deletePost(postId);
+    navigate("/post");
+  };
 
   return (
     <div className="container mt-5">
@@ -36,7 +41,7 @@ const PostDetail = () => {
 
       {post && (
         <>
-          <div className="card">
+          <div className="card mt-5">
             <div className="card-body d-flex justify-content-evenly">
               {/* 왼쪽에 세로로 정렬 */}
               <div className="col">
@@ -55,10 +60,14 @@ const PostDetail = () => {
               <p className="card-text">{post.postText}</p>
             </div>
           </div>
-          <div className="text-end mt-3">
-            <Button className="btn-danger mx-2">삭제</Button>
-            <Button>수정</Button>
-          </div>
+          {currentUser.id == post?.user.id && (
+            <div className="text-end mt-3">
+              <Button className="btn-danger mx-2" onClick={removePost}>
+                삭제
+              </Button>
+              <Button>수정</Button>
+            </div>
+          )}
         </>
       )}
     </div>

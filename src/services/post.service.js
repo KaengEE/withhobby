@@ -20,6 +20,14 @@ class PostService {
   getPostDetail(postId) {
     return axios.get(`${API_URL}/${postId}`, { headers: authHeader() });
   }
+  // 게시글 수정
+
+  // 게시글 삭제
+  deletePost(postId) {
+    return axios.delete(`${API_URL}/delete/${postId}`, {
+      headers: authHeader(),
+    });
+  }
 }
 
 const postService = new PostService();
