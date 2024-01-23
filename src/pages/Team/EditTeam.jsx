@@ -14,46 +14,35 @@ const EditTeam = () => {
   const [teamName, setTeamName] = useState("");
   const [teamTitle, setTeamTitle] = useState("");
   const [file, setFile] = useState(null);
-  const [category, setCategory] = useState("");
-  const [categories, setCategories] = useState([]);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await categoryService.getList();
-        setCategories(response.data);
-      } catch (error) {
-        console.error("카테고리를 불러오는데 오류 발생:", error);
-      }
-    };
-
-    fetchData();
-    fetchCategories();
-  }, []);
 
   // 기존 팀 데이터 불러오기
   const fetchData = async () => {
     try {
       const teamData = await teamService.getTeamDetail(teamId);
       setTeam(teamData.data);
-      console.log(teamData.data);
+      setTeamName(team?.teamname);
+      //console.log(teamData.data);
     } catch (error) {
       console.error("팀 데이터를 불러오는데 오류 발생:", error);
     }
   };
 
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   const handleUpdateTeam = async () => {
     // 입력값을 유효성 검사합니다.
-    if (!teamName || !teamTitle || !category) {
-      setError("모든 내용을 입력하세요.");
+    if (!teamTitle) {
+      setError("내용을 입력하세요.");
       return;
     }
 
     try {
       // 새로운 이미지가 선택되었는지 확인
-      let teamUrl = team?.teamImg || "";
+      let teamImg = team?.teamImg || "";
       if (file) {
         // 파일 크기 체크
         if (file.size > 1000 * 1000) {
@@ -66,13 +55,16 @@ const EditTeam = () => {
         // 이미지 파일 업로드
         const result = await uploadBytes(locationRef, file);
         // db에 입력할 주소
-        teamUrl = await getDownloadURL(result.ref);
+        teamImg = await getDownloadURL(result.ref);
       }
+      console.log("teamName:", teamName);
+      console.log("teamTitle:", teamTitle);
+      console.log("teamImg:", teamImg);
 
       // 팀 수정
-      const teamForm = new TeamForm(teamName, teamTitle, teamUrl, category);
+      const teamForm = new TeamForm(teamName, teamTitle, teamImg);
       await teamService.updateTeam(teamId, teamForm);
-
+      console.log(teamForm);
       // 이전 페이지로 이동
       navigate(-1);
     } catch (error) {
@@ -83,37 +75,20 @@ const EditTeam = () => {
 
   return (
     <div className="container mt-3">
-      <h3 className="">팀 수정하기</h3>
+      <h3 className="mb-3">팀 수정하기</h3>
 
       {error && <Alert variant="danger">{error}</Alert>}
 
       <Form>
         <Form.Group className="mb-3">
-          <Form.Label>카테고리 선택</Form.Label>
-          <Form.Select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            required
-          >
-            <option value="" disabled>
-              선택하세요
-            </option>
-            {categories.map((category) => (
-              <option key={category.id} value={category.category}>
-                {category.category}
-              </option>
-            ))}
-          </Form.Select>
-        </Form.Group>
-        <Form.Group className="mb-3">
           <Form.Label>팀 이름</Form.Label>
           <Form.Control
             type="text"
-            placeholder={team?.teamname}
             value={teamName}
-            onChange={(e) => setTeamName(e.target.value)}
-            required
+            placeholder={team?.teamname}
+            readOnly
           />
+          <span className="text-info">팀이름은 수정불가입니다.</span>
         </Form.Group>
 
         <Form.Group className="mb-3">
