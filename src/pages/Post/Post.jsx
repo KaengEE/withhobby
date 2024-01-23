@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import postService from "../../services/post.service";
+import "./Post.css";
 
 const Post = () => {
   const [posts, setPosts] = useState([]);
@@ -38,7 +39,11 @@ const Post = () => {
           {posts.map((post) => (
             <tr key={post.id}>
               <th scope="row">{post.id}</th>
-              <td>{post.postTitle}</td>
+              <td>
+                <Link to={`/post/detail/${post.id}`} className="link">
+                  {post.postTitle}
+                </Link>
+              </td>
               <td>{post.user.username}</td>
               <td>{new Date(post.createAt).toLocaleDateString()}</td>
             </tr>
