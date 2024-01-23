@@ -24,8 +24,10 @@ class TeamService {
     });
   }
   //팀수정
-  updateTeam(teamData) {
-    return axios.put(`${API_URL}/update`, teamData, { headers: authHeader() });
+  updateTeam(teamId, updatedTeam) {
+    return axios.put(`${API_URL}/update/${teamId}`, updatedTeam, {
+      headers: authHeader(),
+    });
   }
 }
 

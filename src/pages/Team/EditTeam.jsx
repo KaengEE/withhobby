@@ -1,125 +1,162 @@
-import React, { useEffect, useState } from "react";
-import { Button, Form, Alert } from "react-bootstrap";
-import categoryService from "../../services/category.service";
-import teamService from "../../services/team.service";
-import { storage } from "../../firebase";
-import TeamForm from "../../models/TeamForm";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import React, { useState, useEffect } from "react";
+import { Form, Button } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
+import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
+import teamService from "../../services/team.service";
+import Team from "../../models/Team";
+import { storage } from "../../firebase";
+import categoryService from "../../services/category.service";
 import { useSelector } from "react-redux";
+import TeamForm from "../../models/TeamForm";
 
 const EditTeam = () => {
   const { teamId } = useParams();
-  const [team, setTeam] = useState();
-  const [teamName, setTeamName] = useState("");
   const [teamTitle, setTeamTitle] = useState("");
+  const [teamName, setTeamName] = useState("");
+  const [category, setCategory] = useState("");
+  const [categories, setCategories] = useState([]);
   const [file, setFile] = useState(null);
-  const [error, setError] = useState("");
+  const [existingImgUrl, setExistingImgUrl] = useState("");
   const navigate = useNavigate();
 
-  // 기존 팀 데이터 불러오기
-  const fetchData = async () => {
-    try {
-      const teamData = await teamService.getTeamDetail(teamId);
-      setTeam(teamData.data);
-      setTeamName(team?.teamname);
-      //console.log(teamData.data);
-    } catch (error) {
-      console.error("팀 데이터를 불러오는데 오류 발생:", error);
-    }
-  };
-
   useEffect(() => {
-    fetchData();
-  }, []);
+    const fetchTeamData = async () => {
+      try {
+        const response = await teamService.getTeamDetail(teamId);
+        const teamData = response.data;
+        setTeamName(teamData.teamname);
+        setTeamTitle(teamData.teamTitle);
+        setCategory(teamData.category);
+        setExistingImgUrl(teamData.teamImg);
+      } catch (error) {
+        console.error("팀정보 출력실패:", error);
+      }
+    };
 
-  const handleUpdateTeam = async () => {
+    //카테고리
+    const fetchCategories = async () => {
+      try {
+        const response = await categoryService.getList();
+        setCategories(response.data);
+      } catch (error) {
+        console.error("카테고리를 불러오는데 오류 발생:", error);
+      }
+    };
+
+    fetchCategories();
+    fetchTeamData();
+  }, [teamId]);
+
+  const handleUpdateTeam = async (e) => {
+    e.preventDefault();
+
     // 입력값을 유효성 검사합니다.
-    if (!teamTitle) {
-      setError("내용을 입력하세요.");
+    if (!teamTitle || !teamName) {
+      console.error("팀 제목을 입력하세요.");
       return;
     }
 
     try {
+      let teamImg = existingImgUrl;
+
       // 새로운 이미지가 선택되었는지 확인
-      let teamImg = team?.teamImg || "";
       if (file) {
         // 파일 크기 체크
         if (file.size > 1000 * 1000) {
-          setError("이미지 사이즈는 1MB 이하로 해주세요.");
+          console.error("이미지 사이즈는 1MB 이하로 해주세요.");
           return;
         }
 
-        // 이미지 업로드시 참조주소
         const locationRef = ref(storage, `teamImages/${file.name}`);
-        // 이미지 파일 업로드
         const result = await uploadBytes(locationRef, file);
-        // db에 입력할 주소
         teamImg = await getDownloadURL(result.ref);
       }
-      console.log("teamName:", teamName);
-      console.log("teamTitle:", teamTitle);
-      console.log("teamImg:", teamImg);
 
-      // 팀 수정
-      const teamForm = new TeamForm(teamName, teamTitle, teamImg);
-      await teamService.updateTeam(teamId, teamForm);
-      console.log(teamForm);
+      console.log(teamName);
+      console.log(teamTitle);
+      console.log(teamImg);
+      console.log(category.category);
+
+      const updatedTeam = new TeamForm(
+        teamName,
+        teamTitle,
+        teamImg,
+        category.category
+      );
+
+      await teamService.updateTeam(teamId, updatedTeam);
+
       // 이전 페이지로 이동
-      navigate(-1);
+      navigate(`/team/detail/${teamId}`);
     } catch (error) {
       console.error("팀 수정 중 오류 발생:", error);
-      setError("팀 수정 중 오류가 발생했습니다.");
     }
   };
 
   return (
-    <div className="container mt-3">
-      <h3 className="mb-3">팀 수정하기</h3>
-
-      {error && <Alert variant="danger">{error}</Alert>}
-
-      <Form>
-        <Form.Group className="mb-3">
-          <Form.Label>팀 이름</Form.Label>
-          <Form.Control
-            type="text"
-            value={teamName}
-            placeholder={team?.teamname}
-            readOnly
-          />
-          <span className="text-info">팀이름은 수정불가입니다.</span>
-        </Form.Group>
-
-        <Form.Group className="mb-3">
-          <Form.Label>팀 제목</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder={team?.teamTitle}
-            value={teamTitle}
-            onChange={(e) => setTeamTitle(e.target.value)}
+    <div
+      className="container mt-5 border rounded p-4 shadow"
+      style={{ maxWidth: "800px" }}
+    >
+      <div className="container mt-4">
+        <h2>팀 수정하기</h2>
+        <Form className="mt-3" onSubmit={handleUpdateTeam}>
+          <Form.Select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
             required
-          />
-        </Form.Group>
+          >
+            <option value="" disabled>
+              선택하세요
+            </option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.category}>
+                {category.category}
+              </option>
+            ))}
+          </Form.Select>
 
-        <Form.Group className="mb-3">
-          <Form.Label>팀 대표사진</Form.Label>
-          <Form.Control
-            type="file"
-            onChange={(e) => setFile(e.target.files[0])}
-            required
-          />
-        </Form.Group>
+          <Form.Group controlId="teamName">
+            <Form.Label>팀 이름</Form.Label>
+            <Form.Control
+              type="text"
+              value={teamName}
+              onChange={(e) => setTeamName(e.target.value)}
+            />
+          </Form.Group>
 
-        <div className="d-flex justify-content-between">
-          <Button variant="danger" onClick={() => navigate(-1)}>
-            취소
-          </Button>
-          <Button variant="primary" onClick={handleUpdateTeam}>
-            수정
-          </Button>
-        </div>
-      </Form>
+          <Form.Group controlId="teamTitle">
+            <Form.Label>팀 제목</Form.Label>
+            <Form.Control
+              type="text"
+              value={teamTitle}
+              onChange={(e) => setTeamTitle(e.target.value)}
+            />
+          </Form.Group>
+
+          <Form.Group controlId="teamImg">
+            <Form.Label>팀 대표사진</Form.Label>
+            <Form.Control
+              type="file"
+              onChange={(e) => setFile(e.target.files[0])}
+            />
+          </Form.Group>
+
+          <div className="text-end mt-4">
+            <Button
+              variant="danger"
+              type="button"
+              className="me-2"
+              onClick={() => navigate(`/team/detail/${teamId}`)}
+            >
+              취소
+            </Button>
+            <Button variant="primary" type="submit">
+              수정 완료
+            </Button>
+          </div>
+        </Form>
+      </div>
     </div>
   );
 };
