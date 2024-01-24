@@ -17,6 +17,12 @@ class UserService {
   updateProfile(user) {
     return axios.put(`${API_URL}/profile`, user, { headers: authHeader() });
   }
+  //유저id에 맞는 유저찾기
+  getUserById(userId) {
+    return axios.get(`${API_URL}/findUsername/${userId}`, {
+      headers: authHeader(),
+    });
+  }
 }
 
 const userService = new UserService();
