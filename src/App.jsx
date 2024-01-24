@@ -19,6 +19,7 @@ import PostDetail from "./pages/Post/PostDetail";
 import EditPost from "./pages/Post/EditPost";
 import CreateTogether from "./pages/Together/CreateTogether";
 import EditTogether from "./pages/Together/EditTogether";
+import TogetherMember from "./pages/Together/TogetherMember";
 
 function App() {
   return (
@@ -50,6 +51,10 @@ function App() {
             <Route
               path="/team/detail/:teamId/together/edit/:togetherId"
               element={<EditTogether />}
+            />
+            <Route
+              path="/team/detail/:teamId/together/member/:togetherId"
+              element={<TogetherMember />}
             />
 
             {/* 오류 주소 */}

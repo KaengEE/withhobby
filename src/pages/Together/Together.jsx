@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import togetherService from "../../services/together.service";
-import { Button, Dropdown, DropdownButton } from "react-bootstrap";
+import { Button, Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import togetherMemberService from "../../services/togetherMember.service";
+import TogetherMember from "./TogetherMember";
 
 const Together = ({ teamId, hostId }) => {
   const [togethers, setTogethers] = useState([]);
   const [userMemberships, setUserMemberships] = useState({});
   const currentUser = useSelector((state) => state.user);
-  const [selectedTogether, setSelectedTogether] = useState(null);
-  const [members, setMembers] = useState([]);
+  const [showMemberList, setShowMemberList] = useState(false);
+  const [selectedTogetherId, setSelectedTogetherId] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -61,26 +62,16 @@ const Together = ({ teamId, hostId }) => {
     }
   };
 
-  const getTogetherMember = async (togetherId) => {
-    try {
-      const members = await togetherMemberService.getTogetherMember(togetherId);
-
-      setMembers(members);
-
-      toggleSelectedTogether(togetherId);
-    } catch (error) {
-      console.error("멤버 불러오는데 실패함:", error);
-    }
+  //모달 열고닫기
+  const handleShow = (togetherId) => {
+    setSelectedTogetherId(togetherId);
+    setShowMemberList(true);
   };
 
-  // 드롭다운버튼
-  const toggleSelectedTogether = (togetherId) => {
-    setSelectedTogether((prevSelected) =>
-      prevSelected === togetherId ? null : togetherId
-    );
+  const handleClose = () => {
+    setSelectedTogetherId(null);
+    setShowMemberList(false);
   };
-
-  console.log(members);
 
   return (
     <div>
@@ -100,6 +91,7 @@ const Together = ({ teamId, hostId }) => {
             <th>날짜</th>
             {currentUser.id === hostId ? null : <th>신청</th>}
             {currentUser.id === hostId ? <th>관리</th> : null}
+            <th>멤버</th>
           </tr>
         </thead>
         <tbody>
@@ -144,26 +136,17 @@ const Together = ({ teamId, hostId }) => {
                     >
                       수정
                     </Link>
-
-                    {/* 드롭다운 */}
-                    {/* <DropdownButton
-                      id={`dropdownButton${together.id}`}
-                      title="멤버 리스트"
-                      show={selectedTogether === together.id}
-                      onClick={() => getTogetherMember(together.id)}
-                    > */}
-                    {/* 멤버 리스트 */}
-                    {/* {members.map((member) => (
-                        <Dropdown.Item
-                          key={member.id}
-                          className="dropdown-item"
-                        >
-                          {member.userId}
-                        </Dropdown.Item>
-                      ))}
-                    </DropdownButton> */}
                   </>
                 ) : null}
+              </td>
+              <td>
+                {/* 멤버리스트 */}
+                <Button onClick={handleShow}>멤버</Button>
+                <TogetherMember
+                  show={showMemberList}
+                  handleClose={handleClose}
+                  togetherId={together.id}
+                />
               </td>
             </tr>
           ))}
