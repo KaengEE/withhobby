@@ -4,7 +4,7 @@ import teamService from "../../services/team.service";
 import { useSelector } from "react-redux";
 import { Button, Image, Container, Row, Col, Accordion } from "react-bootstrap";
 import memberService from "../../services/member.service";
-import Together from "./Together";
+import Together from "../Together/Together";
 
 const TeamDetail = () => {
   const { teamId } = useParams();
