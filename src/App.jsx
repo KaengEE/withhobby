@@ -20,6 +20,7 @@ import EditPost from "./pages/Post/EditPost";
 import CreateTogether from "./pages/Together/CreateTogether";
 import EditTogether from "./pages/Together/EditTogether";
 import TogetherMember from "./pages/Together/TogetherMember";
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -63,6 +64,7 @@ function App() {
             <Route path="/*" element={<NotFound />} />
           </Routes>
         </div>
+        <Footer />
       </BrowserRouter>
     </div>
   );

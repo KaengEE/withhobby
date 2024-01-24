@@ -14,7 +14,7 @@ const Home = () => {
   const fetchTeamList = async () => {
     try {
       const response = await teamService.getTeamList();
-      const latestTeams = response.data.slice(0, 8); //8개가져오기
+      const latestTeams = response.data.slice(0, 8); //8개 가져오기
       setTeamList(latestTeams);
     } catch (error) {
       console.error("팀 리스트를 가져오는데 오류 발생:", error);
@@ -25,7 +25,8 @@ const Home = () => {
   const fetchPostList = async () => {
     try {
       const response = await postService.getPostList();
-      setPostList(response.data);
+      const latestPost = response.data.slice(0, 5); //5개 가져오기
+      setPostList(latestPost);
     } catch (error) {
       console.error("게시글 리스트를 가져오는데 오류 발생:", error);
     }
