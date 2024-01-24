@@ -1,29 +1,41 @@
 import React, { useEffect, useState } from "react";
 import { Card } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import categoryService from "../../services/category.service";
 import { useSelector } from "react-redux";
 
 const Category = () => {
   const [category, setCategory] = useState([]); //카테고리 리스트
   const currentUser = useSelector((state) => state.user);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // 컴포넌트가 마운트되면 카테고리 리스트를 불러오기
-    const categoryList = async () => {
+    // 카테고리 리스트를 불러오기
+    const fetchCategoryList = async () => {
       try {
-        const response = await categoryService.getList();
-        //id 오름차순
-        const sortedCategories = response.data.sort((a, b) => a.id - b.id);
-        setCategory(sortedCategories);
-        //console.log(response.data);
+        // 로그인 유저가 있으면
+        if (currentUser && currentUser?.role) {
+          const response = await categoryService.getList();
+          // id 오름차순
+          const sortedCategories = response.data.sort((a, b) => a.id - b.id);
+          setCategory(sortedCategories);
+          // console.log(response.data);
+        } else {
+          //없으면 페이지이동
+          navigate("/login");
+        }
       } catch (error) {
         console.error("리스트를 가져오는데 오류 발생:", error);
       }
     };
 
-    categoryList();
+    fetchCategoryList();
   }, []);
+
+  if (!currentUser) {
+    alert("로그인해주세요!");
+    return null;
+  }
 
   return (
     <div className="container mt-4">
@@ -38,7 +50,7 @@ const Category = () => {
       )}
 
       {category.length === 0 ? (
-        <p>No categories available.</p>
+        <p>카테고리 없음</p>
       ) : (
         <div className="d-flex flex-wrap gap-3 mt-3">
           {/* 카테고리 리스트 */}
