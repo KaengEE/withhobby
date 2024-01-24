@@ -11,7 +11,9 @@ const CreateTogether = () => {
   const [date, setDate] = useState("");
   const navigate = useNavigate();
 
-  const handleCreateTogether = async () => {
+  const handleCreateTogether = async (e) => {
+    e.preventDefault();
+
     const togetherData = {
       title: title,
       location: location,
