@@ -12,6 +12,11 @@ class TogetherService {
     });
   }
   //모임 수정
+  updateTogether(togetherId, updateData) {
+    return axios.put(`${API_URL}/${togetherId}`, updateData, {
+      headers: authHeader(),
+    });
+  }
 
   //모임 삭제
   removeTogether(togetherId) {
@@ -30,6 +35,13 @@ class TogetherService {
   //모임 리스트
   getTogetherList(teamId) {
     return axios.get(`${API_URL}/list/${teamId}`, {
+      headers: authHeader(),
+    });
+  }
+
+  //모임 상세조회
+  getTogetherDetail(togetherId) {
+    return axios.get(`${API_URL}/detail/${togetherId}`, {
       headers: authHeader(),
     });
   }

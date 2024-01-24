@@ -72,6 +72,7 @@ const Together = ({ teamId, hostId }) => {
           <tr>
             <th>#</th>
             <th>제목</th>
+            <th>장소</th>
             <th>설명</th>
             <th>날짜</th>
             {currentUser.id === hostId ? null : <th>신청</th>}
@@ -83,6 +84,7 @@ const Together = ({ teamId, hostId }) => {
             <tr key={together.id}>
               <td>{index + 1}</td>
               <td>{together.title}</td>
+              <td>{together.location}</td>
               <td>{together.togetherDep}</td>
               <td>{together.date}</td>
               {currentUser.id !== hostId ? (
