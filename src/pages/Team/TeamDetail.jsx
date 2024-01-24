@@ -23,26 +23,17 @@ const TeamDetail = () => {
   };
 
   useEffect(() => {
-    if (
-      currentUser?.id != null &&
-      team &&
-      team.teamHost &&
-      team.teamHost.id != null
-    ) {
-      const fetchTeamDetail = async () => {
-        try {
-          const response = await teamService.getTeamDetail(teamId);
-          setTeam(response.data);
-        } catch (error) {
-          console.error("팀 정보를 불러오는데 오류 발생:", error);
-        }
-      };
+    const fetchTeamDetail = async () => {
+      try {
+        const response = await teamService.getTeamDetail(teamId);
+        setTeam(response.data);
+      } catch (error) {
+        console.error("팀 정보를 불러오는데 오류 발생:", error);
+      }
+    };
 
-      fetchTeamDetail();
-      fetchMemberList();
-    } else {
-      navigate("/login");
-    }
+    fetchTeamDetail();
+    fetchMemberList();
   }, [teamId]);
 
   const handleJoinTeam = async () => {
