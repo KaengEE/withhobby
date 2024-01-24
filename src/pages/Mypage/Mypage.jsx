@@ -117,9 +117,32 @@ const Mypage = () => {
             </Button>
           </Card.Body>
         </Card>
+        {/* 내가 속해있는 팀 */}
         <Card className="mt-5">
           <Card.Body>
-            <Card.Title>Profile Information</Card.Title>
+            <Card.Title className="card-title">나의 팀</Card.Title>
+            <Card.Text>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
+              quam velit, vulputate eu pharetra nec, mattis ac neque. Duis
+              vulputate commodo lectus, ac blandit elit tincidunt id.
+            </Card.Text>
+          </Card.Body>
+        </Card>
+        {/* 나의 모임 */}
+        <Card className="mt-5">
+          <Card.Body>
+            <Card.Title>나의 모임</Card.Title>
+            <Card.Text>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
+              quam velit, vulputate eu pharetra nec, mattis ac neque. Duis
+              vulputate commodo lectus, ac blandit elit tincidunt id.
+            </Card.Text>
+          </Card.Body>
+        </Card>
+        {/* 내가 작성한 게시글 */}
+        <Card className="mt-5">
+          <Card.Body>
+            <Card.Title>나의 게시글</Card.Title>
             <Card.Text>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
               quam velit, vulputate eu pharetra nec, mattis ac neque. Duis

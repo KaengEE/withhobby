@@ -4,3 +4,7 @@
   height: 150px;
   border-radius: 100%;
 }
+
+.card-title {
+  font-weight: bold;
+}
