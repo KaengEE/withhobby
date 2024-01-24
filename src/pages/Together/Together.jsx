@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import togetherService from "../../services/together.service";
-import { Button } from "react-bootstrap";
+import { Button, Dropdown, DropdownButton } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import togetherMemberService from "../../services/togetherMember.service";
 
@@ -9,6 +9,8 @@ const Together = ({ teamId, hostId }) => {
   const [togethers, setTogethers] = useState([]);
   const [userMemberships, setUserMemberships] = useState({});
   const currentUser = useSelector((state) => state.user);
+  const [selectedTogether, setSelectedTogether] = useState(null);
+  const [members, setMembers] = useState([]);
 
   useEffect(() => {
     fetchData();
@@ -58,6 +60,27 @@ const Together = ({ teamId, hostId }) => {
       fetchData(); // 수정: 리스트 다시 불러오기
     }
   };
+
+  const getTogetherMember = async (togetherId) => {
+    try {
+      const members = await togetherMemberService.getTogetherMember(togetherId);
+
+      setMembers(members);
+
+      toggleSelectedTogether(togetherId);
+    } catch (error) {
+      console.error("멤버 불러오는데 실패함:", error);
+    }
+  };
+
+  // 드롭다운버튼
+  const toggleSelectedTogether = (togetherId) => {
+    setSelectedTogether((prevSelected) =>
+      prevSelected === togetherId ? null : togetherId
+    );
+  };
+
+  console.log(members);
 
   return (
     <div>
@@ -121,7 +144,24 @@ const Together = ({ teamId, hostId }) => {
                     >
                       수정
                     </Link>
-                    <Button>멤버확인</Button>
+
+                    {/* 드롭다운 */}
+                    {/* <DropdownButton
+                      id={`dropdownButton${together.id}`}
+                      title="멤버 리스트"
+                      show={selectedTogether === together.id}
+                      onClick={() => getTogetherMember(together.id)}
+                    > */}
+                    {/* 멤버 리스트 */}
+                    {/* {members.map((member) => (
+                        <Dropdown.Item
+                          key={member.id}
+                          className="dropdown-item"
+                        >
+                          {member.userId}
+                        </Dropdown.Item>
+                      ))}
+                    </DropdownButton> */}
                   </>
                 ) : null}
               </td>

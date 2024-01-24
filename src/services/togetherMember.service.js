@@ -18,6 +18,13 @@ class TogetherMemberService {
       headers: authHeader(),
     });
   }
+
+  //모임별 참가자 조회
+  getTogetherMember(togetherId) {
+    return axios.get(`${API_URL}/togetherMember/${togetherId}`, {
+      headers: authHeader(),
+    });
+  }
 }
 
 const togetherMemberService = new TogetherMemberService();
