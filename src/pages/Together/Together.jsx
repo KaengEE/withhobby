@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import togetherService from "../../services/together.service";
 import { Button } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import teamService from "../../services/team.service";
+import togetherMemberService from "../../services/togetherMember.service";
 
 const Together = ({ teamId, hostId }) => {
   const [togethers, setTogethers] = useState([]);
@@ -31,9 +31,26 @@ const Together = ({ teamId, hostId }) => {
     }
   };
 
-  const isUserMember = (togetherId) => {
-    return togetherService.checkMember(currentUser.id, togetherId);
+  //모임의 멤버인지 확인(멤버가 맞으면 true)
+  const isUserMember = async (togetherId) => {
+    const response = await togetherService.checkMember(
+      currentUser.id,
+      togetherId
+    );
+    console.log(currentUser.id);
+    console.log(togetherId);
+    return response.data;
   };
+
+  //모임 join
+  const joinTogether = async (togetherId) => {
+    await togetherMemberService.joinTogether(teamId, togetherId);
+    console.log(togetherId);
+    alert("참가완료!");
+    fetchTogetherList();
+  };
+
+  //모임 취소
 
   return (
     <div>
@@ -51,7 +68,7 @@ const Together = ({ teamId, hostId }) => {
             <th>제목</th>
             <th>설명</th>
             <th>날짜</th>
-            <th>신청</th>
+            {currentUser.id == hostId ? null : <th>신청</th>}
             {currentUser.id == hostId ? <th>관리</th> : null}
           </tr>
         </thead>
@@ -62,22 +79,30 @@ const Together = ({ teamId, hostId }) => {
               <td>{together.title}</td>
               <td>{together.togetherDep}</td>
               <td>{together.date}</td>
-              <td>
-                {/* 현재유저가 해당 모임의 멤버이면 취소버튼만 보이게함 */}
-                {isUserMember(together.id) ? (
-                  <Button>신청</Button>
-                ) : (
-                  <Button className="btn-danger ms-1">취소</Button>
-                )}
-              </td>
+              {currentUser.id != hostId ? (
+                <td>
+                  {/* 현재유저가 해당 모임의 멤버이면 취소버튼만 보이게함 */}
+                  {isUserMember ? (
+                    <Button className="btn-danger ms-1">취소</Button>
+                  ) : (
+                    <Button onClick={() => joinTogether(together.id)}>
+                      신청
+                    </Button>
+                  )}
+                </td>
+              ) : null}
+
               <td>
                 {currentUser.id == hostId ? (
-                  <Button
-                    className="btn-danger"
-                    onClick={() => removeTogether(together.id)}
-                  >
-                    삭제
-                  </Button>
+                  <>
+                    <Button
+                      className="btn-danger"
+                      onClick={() => removeTogether(together.id)}
+                    >
+                      삭제
+                    </Button>
+                    <Button>멤버확인</Button>
+                  </>
                 ) : null}
               </td>
             </tr>
