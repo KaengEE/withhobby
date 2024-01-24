@@ -33,6 +33,12 @@ class TeamService {
   getTeamList() {
     return axios.get(`${API_URL}/list`);
   }
+  //userid로 내가 생성한 team 찾기
+  getHostTeam(userId) {
+    return axios.get(`${API_URL}/findTeam/${userId}`, {
+      headers: authHeader(),
+    });
+  }
 }
 
 const teamService = new TeamService();

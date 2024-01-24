@@ -8,6 +8,8 @@ import MypageModal from "./MypageModal";
 import userService from "../../services/user.service";
 import { storage } from "../../firebase";
 import { setCurrentUser } from "../../store/actions/user";
+import teamService from "../../services/team.service";
+import { Link } from "react-router-dom";
 
 const Mypage = () => {
   const currentUser = useSelector((state) => state.user); //현재유저
@@ -19,6 +21,8 @@ const Mypage = () => {
   const [newAvatar, setNewAvatar] = useState(currentUser?.userProfile || img);
   //수정이름
   const [newName, setNewName] = useState(currentUser.name);
+  //hostTeam
+  const [hostTeam, setHostTeam] = useState();
 
   // 모달 상태 관리
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -35,6 +39,7 @@ const Mypage = () => {
 
   useEffect(() => {
     getUser(currentUser.id);
+    getHostTeam(currentUser.id);
   }, []);
 
   //유저 가져오기
@@ -70,6 +75,19 @@ const Mypage = () => {
       setNewAvatar(avatarUrl);
     }
   };
+
+  // 내가 host인 팀 찾기
+  const getHostTeam = async (userId) => {
+    try {
+      const response = await teamService.getHostTeam(userId);
+      setHostTeam(response?.data);
+      //console.log(response?.data);
+    } catch (error) {
+      console.error("나의 팀 가져오기 실패:", error);
+    }
+  };
+
+  console.log(hostTeam);
 
   //프로필 수정
   const handleEdit = async () => {
@@ -132,11 +150,28 @@ const Mypage = () => {
         <Card className="mt-5">
           <Card.Body>
             <Card.Title>나의 모임</Card.Title>
-            <Card.Text>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-              quam velit, vulputate eu pharetra nec, mattis ac neque. Duis
-              vulputate commodo lectus, ac blandit elit tincidunt id.
-            </Card.Text>
+            {hostTeam && (
+              <div className="team-info d-flex justify-content-center">
+                {/* 이미지 */}
+                {hostTeam.teamImg && (
+                  <img
+                    src={hostTeam.teamImg}
+                    alt={`${hostTeam.teamname}`}
+                    className="team-image"
+                  />
+                )}
+                {/* 팀 정보 */}
+                <div className="mt-5 ms-5">
+                  <h5>{hostTeam.teamname}</h5>
+                  <p>{hostTeam.teamTitle}</p>
+                  {/* 바로가기 */}
+                  <Link to={`/team/detail/${hostTeam.id}`}>
+                    <Button variant="primary">바로가기</Button>
+                  </Link>
+                </div>
+              </div>
+            )}
+            {!hostTeam && <p>내가 호스트인 모임이 없습니다.</p>}
           </Card.Body>
         </Card>
         {/* 내가 작성한 게시글 */}

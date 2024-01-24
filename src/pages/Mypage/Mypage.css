@@ -8,3 +8,9 @@
 .card-title {
   font-weight: bold;
 }
+
+.team-image {
+  margin-top: 20px;
+  width: auto;
+  height: 200px;
+}
