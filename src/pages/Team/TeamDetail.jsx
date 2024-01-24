@@ -12,6 +12,7 @@ const TeamDetail = () => {
   const currentUser = useSelector((state) => state.user);
   const navigate = useNavigate();
   const [member, setMember] = useState([]);
+  const [teamHost, setTeamHost] = useState();
 
   const fetchMemberList = async () => {
     try {
@@ -26,6 +27,8 @@ const TeamDetail = () => {
     const fetchTeamDetail = async () => {
       try {
         const response = await teamService.getTeamDetail(teamId);
+        const hostId = response.data.teamHost.id;
+        setTeamHost(hostId);
         setTeam(response.data);
       } catch (error) {
         console.error("팀 정보를 불러오는데 오류 발생:", error);
@@ -135,7 +138,7 @@ const TeamDetail = () => {
         </Col>
       </Row>
       {/* 모임 */}
-      <Together />
+      <Together teamId={teamId} hostId={teamHost} />
     </Container>
   );
 };

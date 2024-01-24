@@ -30,8 +30,8 @@ class TeamService {
     });
   }
   //전체조회
-  getTeamList(){
-    return axios.get(`${API_URL}/list`)
+  getTeamList() {
+    return axios.get(`${API_URL}/list`);
   }
 }
 

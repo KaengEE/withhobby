@@ -19,7 +19,6 @@ const CreateTogether = () => {
       date: date,
     };
     try {
-      console.log(togetherData);
       await togetherService.createTogether(teamId, togetherData);
       navigate(`/team/detail/${teamId}`);
     } catch (error) {
@@ -71,6 +70,14 @@ const CreateTogether = () => {
           />
         </Form.Group>
         <div className="text-end">
+          <Button
+            className="btn btn-danger mt-3 me-2"
+            onClick={() => {
+              navigate(`/team/detail/${teamId}`);
+            }}
+          >
+            취소
+          </Button>
           <Button type="submit" className="btn btn-primary mt-3">
             생성하기
           </Button>
