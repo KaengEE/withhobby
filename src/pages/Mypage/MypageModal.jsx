@@ -8,6 +8,7 @@ const MypageModal = ({
   onAvatarChange,
   newName,
   handleEdit,
+  handleNameChange,
 }) => {
   return (
     <div>
@@ -34,7 +35,12 @@ const MypageModal = ({
             />
           </label>
           <label>
-            이름: <input type="text" value={newName}></input>
+            이름:{" "}
+            <input
+              type="text"
+              value={newName}
+              onChange={(e) => handleNameChange(e.target.value)}
+            ></input>
           </label>
         </Modal.Body>
         <Modal.Footer>

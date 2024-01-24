@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Card } from "react-bootstrap";
 import img from "../../assets/sample.jpg";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,14 +11,14 @@ import { setCurrentUser } from "../../store/actions/user";
 
 const Mypage = () => {
   const currentUser = useSelector((state) => state.user); //현재유저
+  //유저객체
+  const [user, setUser] = useState();
   //프로필사진
   const [avatar, setAvatar] = useState(currentUser?.userProfile || img);
   //새프로필사진
   const [newAvatar, setNewAvatar] = useState(currentUser?.userProfile || img);
   //수정이름
   const [newName, setNewName] = useState(currentUser.name);
-
-  const dispatch = useDispatch();
 
   // 모달 상태 관리
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -31,6 +31,21 @@ const Mypage = () => {
   // 모달 닫기
   const closeModal = () => {
     setIsModalOpen(false);
+  };
+
+  useEffect(() => {
+    getUser(currentUser.id);
+  }, []);
+
+  //유저 가져오기
+  const getUser = async (userId) => {
+    const response = await userService.getUserById(userId);
+    setUser(response.data);
+  };
+
+  // 이름 변경 이벤트 핸들러
+  const handleNameChange = (newNameValue) => {
+    setNewName(newNameValue);
   };
 
   //프로필사진수정
@@ -78,9 +93,9 @@ const Mypage = () => {
 
     // 모달 닫기
     closeModal();
+    //유저 다시 가져오기
+    getUser(currentUser.id);
   };
-
-  console.log(currentUser);
 
   return (
     <div className="container mt-5">
@@ -88,14 +103,14 @@ const Mypage = () => {
         <Card className="text-center">
           {/* 이미지 */}
           <div className="img">
-            {avatar && <img src={currentUser?.userProfile} alt="User Avatar" />}
+            {avatar && <img src={user?.userProfile} alt="User Avatar" />}
           </div>
           <Card.Body>
             <Card.Title>
-              <strong>{currentUser?.name}</strong>
+              <strong>{user?.name}</strong>
             </Card.Title>
             <Card.Text>
-              👑 {currentUser?.userStatus} {currentUser?.role}
+              👑 {user?.userStatus} {currentUser?.role}
             </Card.Text>
             <Button variant="primary" onClick={openModal}>
               프로필 수정
@@ -121,6 +136,7 @@ const Mypage = () => {
         onAvatarChange={onAvatarChange}
         newName={newName}
         handleEdit={handleEdit}
+        handleNameChange={handleNameChange}
       />
     </div>
   );
