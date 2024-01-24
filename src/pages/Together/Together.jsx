@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import togetherService from "../../services/together.service";
 import { Button } from "react-bootstrap";
 import { useSelector } from "react-redux";
@@ -7,60 +7,66 @@ import togetherMemberService from "../../services/togetherMember.service";
 
 const Together = ({ teamId, hostId }) => {
   const [togethers, setTogethers] = useState([]);
-  const currentUser = useSelector((state) => state.user); //현재유저
+  const [userMemberships, setUserMemberships] = useState({});
+  const currentUser = useSelector((state) => state.user);
 
   useEffect(() => {
-    fetchTogetherList();
-  }, []);
+    fetchData();
+  }, [teamId, currentUser.id]);
 
-  //리스트불러오기
-  const fetchTogetherList = async () => {
-    const response = await togetherService.getTogetherList(teamId);
-    setTogethers(response.data);
+  const fetchData = async () => {
+    const togetherList = await togetherService.getTogetherList(teamId);
+    setTogethers(togetherList.data);
+
+    const memberships = {};
+    for (const together of togetherList.data) {
+      memberships[together.id] = await isUserMember(together.id);
+    }
+    setUserMemberships(memberships);
   };
 
-  //모임삭제
-  const removeTogether = async (togetherId) => {
-    // 확인 창을 띄움
-    const confirmDelete = window.confirm("정말로 삭제하시겠습니까?");
-
-    if (confirmDelete) {
-      await togetherService.removeTogether(togetherId);
-      //삭제 후 리스트 다시 불러옴
-      fetchTogetherList();
+  const isUserMember = async (togetherId) => {
+    if (!togetherId) {
+      return false;
+    } else {
+      const response = await togetherService.checkMember(
+        currentUser.id,
+        togetherId
+      );
+      return response.data;
     }
   };
 
-  //모임의 멤버인지 확인(멤버가 맞으면 true)
-  const isUserMember = async (togetherId) => {
-    const response = await togetherService.checkMember(
-      currentUser.id,
-      togetherId
-    );
-    console.log(currentUser.id);
-    console.log(togetherId);
-    return response.data;
+  const removeTogether = async (togetherId) => {
+    const confirmDelete = window.confirm("정말로 삭제하시겠습니까?");
+    if (confirmDelete) {
+      await togetherService.removeTogether(togetherId);
+      fetchData(); // 수정: 리스트 다시 불러오기
+    }
   };
 
-  //모임 join
   const joinTogether = async (togetherId) => {
     await togetherMemberService.joinTogether(teamId, togetherId);
-    console.log(togetherId);
     alert("참가완료!");
-    fetchTogetherList();
+    fetchData(); // 수정: 리스트 다시 불러오기
   };
 
-  //모임 취소
+  const cancelTogether = async (togetherId) => {
+    const confirmCancel = window.confirm("모임참가를 취소 하시겠습니까?");
+    if (confirmCancel) {
+      await togetherMemberService.cancelTogether(togetherId);
+      fetchData(); // 수정: 리스트 다시 불러오기
+    }
+  };
 
   return (
     <div>
       <h4>모임</h4>
-      {currentUser.id == hostId ? (
+      {currentUser.id === hostId ? (
         <Link to={`/together/create/${teamId}`} className="btn btn-primary">
           모임생성
         </Link>
       ) : null}
-      {/* 모임리스트 - 테이블 형식 */}
       <table className="table">
         <thead>
           <tr>
@@ -68,8 +74,8 @@ const Together = ({ teamId, hostId }) => {
             <th>제목</th>
             <th>설명</th>
             <th>날짜</th>
-            {currentUser.id == hostId ? null : <th>신청</th>}
-            {currentUser.id == hostId ? <th>관리</th> : null}
+            {currentUser.id === hostId ? null : <th>신청</th>}
+            {currentUser.id === hostId ? <th>관리</th> : null}
           </tr>
         </thead>
         <tbody>
@@ -79,11 +85,17 @@ const Together = ({ teamId, hostId }) => {
               <td>{together.title}</td>
               <td>{together.togetherDep}</td>
               <td>{together.date}</td>
-              {currentUser.id != hostId ? (
+              {currentUser.id !== hostId ? (
                 <td>
-                  {/* 현재유저가 해당 모임의 멤버이면 취소버튼만 보이게함 */}
-                  {isUserMember ? (
-                    <Button className="btn-danger ms-1">취소</Button>
+                  {userMemberships[together.id] ? (
+                    <Button
+                      className="btn-danger ms-1"
+                      onClick={() => {
+                        cancelTogether(together.id);
+                      }}
+                    >
+                      취소
+                    </Button>
                   ) : (
                     <Button onClick={() => joinTogether(together.id)}>
                       신청
@@ -93,14 +105,20 @@ const Together = ({ teamId, hostId }) => {
               ) : null}
 
               <td>
-                {currentUser.id == hostId ? (
+                {currentUser.id === hostId ? (
                   <>
                     <Button
-                      className="btn-danger"
+                      className="btn-danger me-1"
                       onClick={() => removeTogether(together.id)}
                     >
                       삭제
                     </Button>
+                    <Link
+                      to={`together/edit/${together.id}`}
+                      className="btn btn-primary me-1"
+                    >
+                      수정
+                    </Link>
                     <Button>멤버확인</Button>
                   </>
                 ) : null}

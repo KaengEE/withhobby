@@ -18,6 +18,7 @@ import EditTeam from "./pages/Team/EditTeam";
 import PostDetail from "./pages/Post/PostDetail";
 import EditPost from "./pages/Post/EditPost";
 import CreateTogether from "./pages/Together/CreateTogether";
+import EditTogether from "./pages/Together/EditTogether";
 
 function App() {
   return (
@@ -45,6 +46,10 @@ function App() {
             <Route
               path="/together/create/:teamId"
               element={<CreateTogether />}
+            />
+            <Route
+              path="/team/detail/:teamId/together/edit/:togetherId"
+              element={<EditTogether />}
             />
 
             {/* 오류 주소 */}
