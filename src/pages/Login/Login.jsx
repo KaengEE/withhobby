@@ -44,17 +44,17 @@ const Login = () => {
 
     loginService(user)
       .then((response) => {
-        //setCurrentUser로 만든 액션을 유저 리듀서에 전달
+        // setCurrentUser로 만든 액션을 유저 리듀서에 전달
         dispatch(setCurrentUser(response.data));
         navigate("/");
       })
       .catch((error) => {
         console.log(error);
         setErrorMessage("유저네임 또는 패스워드가 틀립니다.");
+      })
+      .finally(() => {
         setLoading(false);
       });
-
-    setLoading(false);
   };
 
   return (
