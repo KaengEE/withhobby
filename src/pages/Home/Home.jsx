@@ -4,12 +4,15 @@ import "./Home.css";
 import { Link } from "react-router-dom";
 import teamService from "../../services/team.service";
 import { Button, Card, Col, Row } from "react-bootstrap";
+import postService from "../../services/post.service";
 
 const Home = () => {
   const [teamList, setTeamList] = useState([]);
+  const [postList, setPostList] = useState([]);
 
   useEffect(() => {
     fetchTeamList();
+    fetchPostList();
   }, []);
 
   //팀리스트 가져오기
@@ -23,8 +26,19 @@ const Home = () => {
     }
   };
 
+  //게시글 리스트 가져오기
+  const fetchPostList = async () => {
+    try {
+      const response = await postService.getPostList();
+      const latestPosts = response.data.slice(0, 5); //5개가져오기
+      setPostList(latestPosts);
+    } catch (error) {
+      console.error("게시글 리스트를 가져오는데 오류 발생:", error);
+    }
+  };
+
   return (
-    <div className="container text-center mt-1">
+    <div className="container text-center">
       <div className="position-relative">
         <img src={banner} alt="Banner" className="banner-image" />
         <Link to="/category" className="btn btn-on-image">
@@ -56,6 +70,35 @@ const Home = () => {
             ))}
           </Row>
         </div>
+      </div>
+      {/* 게시글 리스트 출력 */}
+      <div className="mt-4">
+        <h5 className="main-title mb-4">자유게시판</h5>
+        <table className="table table-hover mt-4">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">제목</th>
+              <th scope="col">작성자</th>
+              <th scope="col">작성일</th>
+            </tr>
+          </thead>
+          <tbody>
+            {/* 게시글 목록을 반복하여 표시 */}
+            {postList.map((post) => (
+              <tr key={post.id}>
+                <th scope="row">{post.id}</th>
+                <td>
+                  <Link to={`/post/detail/${post.id}`} className="link">
+                    {post.postTitle}
+                  </Link>
+                </td>
+                <td>{post.user.username}</td>
+                <td>{new Date(post.createAt).toLocaleDateString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
