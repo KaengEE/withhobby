@@ -39,6 +39,12 @@ class TeamService {
       headers: authHeader(),
     });
   }
+  //userName으로 가입한 팀 찾기
+  getMyTeamList(userName) {
+    return axios.get(`${API_URL}/byUserName/${userName}`, {
+      headers: authHeader(),
+    });
+  }
 }
 
 const teamService = new TeamService();

@@ -14,3 +14,7 @@
   width: auto;
   height: 200px;
 }
+
+.myTeam-image {
+  object-fit: cover;
+}

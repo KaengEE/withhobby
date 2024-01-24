@@ -23,6 +23,8 @@ const Mypage = () => {
   const [newName, setNewName] = useState(currentUser.name);
   //hostTeam
   const [hostTeam, setHostTeam] = useState();
+  //myTeam
+  const [myTeam, setMyTeam] = useState([]);
 
   // 모달 상태 관리
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -40,6 +42,7 @@ const Mypage = () => {
   useEffect(() => {
     getUser(currentUser.id);
     getHostTeam(currentUser.id);
+    getMyTeamList(currentUser.username);
   }, []);
 
   //유저 가져오기
@@ -87,7 +90,17 @@ const Mypage = () => {
     }
   };
 
-  console.log(hostTeam);
+  //내가 속한 팀 리스트
+  const getMyTeamList = async (username) => {
+    try {
+      const response = await teamService.getMyTeamList(username);
+      setMyTeam(response?.data);
+    } catch (error) {
+      console.error("나의 팀 가져오기 실패:", error);
+    }
+  };
+
+  console.log(myTeam);
 
   //프로필 수정
   const handleEdit = async () => {
@@ -139,14 +152,31 @@ const Mypage = () => {
         <Card className="mt-5">
           <Card.Body>
             <Card.Title className="card-title">나의 팀</Card.Title>
-            <Card.Text>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-              quam velit, vulputate eu pharetra nec, mattis ac neque. Duis
-              vulputate commodo lectus, ac blandit elit tincidunt id.
-            </Card.Text>
+            <div className="row">
+              {myTeam.map((team, index) => (
+                <div key={team.id} className="col-md-4 mt-3">
+                  <Card style={{ height: "100%" }}>
+                    <Card.Img
+                      variant="top"
+                      src={team.teamImg}
+                      alt={`${team.teamname}`}
+                      className="myTeam-image"
+                    />
+                    <Card.Body>
+                      <Card.Title>{team.teamname}</Card.Title>
+                      <Card.Text>{team.teamTitle}</Card.Text>
+                      <Link to={`/team/detail/${team.id}`}>
+                        <Button variant="primary">바로가기</Button>
+                      </Link>
+                    </Card.Body>
+                  </Card>
+                </div>
+              ))}
+            </div>
+            {!myTeam.length && <p>내가 속한 팀이 없습니다.</p>}
           </Card.Body>
         </Card>
-        {/* 나의 모임 */}
+        {/* 나의모임 */}
         <Card className="mt-5">
           <Card.Body>
             <Card.Title>나의 모임</Card.Title>
