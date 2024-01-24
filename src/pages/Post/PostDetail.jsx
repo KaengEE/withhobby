@@ -18,26 +18,30 @@ const PostDetail = () => {
   const [selectedComment, setSelectedComment] = useState(null);
 
   useEffect(() => {
-    const fetchPostDetail = async () => {
-      try {
-        const response = await postService.getPostDetail(postId);
-        setPost(response.data);
-      } catch (error) {
-        console.error("Error fetching post detail:", error);
-      }
-    };
+    if (currentUser != null) {
+      const fetchPostDetail = async () => {
+        try {
+          const response = await postService.getPostDetail(postId);
+          setPost(response.data);
+        } catch (error) {
+          console.error("Error fetching post detail:", error);
+        }
+      };
 
-    const fetchComments = async () => {
-      try {
-        const response = await commentService.getComments(postId);
-        setComments(response.data);
-      } catch (error) {
-        console.error("Error fetching comments:", error);
-      }
-    };
-    //console.log(comments);
-    fetchPostDetail();
-    fetchComments();
+      const fetchComments = async () => {
+        try {
+          const response = await commentService.getComments(postId);
+          setComments(response.data);
+        } catch (error) {
+          console.error("Error fetching comments:", error);
+        }
+      };
+      //console.log(comments);
+      fetchPostDetail();
+      fetchComments();
+    } else {
+      navigate("/login");
+    }
   }, [postId]);
 
   const removePost = async () => {

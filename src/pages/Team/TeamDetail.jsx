@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import teamService from "../../services/team.service";
 import { useSelector } from "react-redux";
-import { Button, Image, Container, Row, Col, Accordion, Card } from "react-bootstrap";
+import { Button, Image, Container, Row, Col, Accordion } from "react-bootstrap";
 import memberService from "../../services/member.service";
 
 const TeamDetail = () => {
@@ -17,22 +17,31 @@ const TeamDetail = () => {
       const response = await memberService.getMember(teamId);
       setMember(response.data);
     } catch (error) {
-      console.error("팀 리스트를 불러오는데 오류 발생:", error);
+      console.error("팀 멤버를 불러오는데 오류 발생:", error);
     }
   };
 
   useEffect(() => {
-    const fetchTeamDetail = async () => {
-      try {
-        const response = await teamService.getTeamDetail(teamId);
-        setTeam(response.data);
-      } catch (error) {
-        console.error("팀 정보를 불러오는데 오류 발생:", error);
-      }
-    };
+    if (
+      currentUser?.id != null &&
+      team &&
+      team.teamHost &&
+      team.teamHost.id != null
+    ) {
+      const fetchTeamDetail = async () => {
+        try {
+          const response = await teamService.getTeamDetail(teamId);
+          setTeam(response.data);
+        } catch (error) {
+          console.error("팀 정보를 불러오는데 오류 발생:", error);
+        }
+      };
 
-    fetchTeamDetail();
-    fetchMemberList();
+      fetchTeamDetail();
+      fetchMemberList();
+    } else {
+      navigate("/login");
+    }
   }, [teamId]);
 
   const handleJoinTeam = async () => {
@@ -51,9 +60,11 @@ const TeamDetail = () => {
 
   const handleRemoveMember = async () => {
     const confirm = window.confirm("정말로 탈퇴하시겠습니까?");
-    
+
     if (confirm) {
-      const isCurrentUserMember = member.some((m) => m.username === currentUser.username);
+      const isCurrentUserMember = member.some(
+        (m) => m.username === currentUser.username
+      );
 
       if (isCurrentUserMember) {
         try {
@@ -94,8 +105,11 @@ const TeamDetail = () => {
               탈퇴
             </Button>
           )}
-          {currentUser.id === team?.teamHost.id && (
-            <Link to={`/team/update/${teamId}`} className="btn btn-outline-secondary ml-2">
+          {currentUser && currentUser.id === team?.teamHost.id && (
+            <Link
+              to={`/team/update/${teamId}`}
+              className="btn btn-outline-secondary ml-2"
+            >
               수정
             </Link>
           )}
@@ -105,7 +119,11 @@ const TeamDetail = () => {
         <Col>
           {member.length > 0 ? (
             <div className="container">
-              <Accordion defaultActiveKey="1" className="ms-auto" style={{width:'300px'}}>
+              <Accordion
+                defaultActiveKey="1"
+                className="ms-auto"
+                style={{ width: "300px" }}
+              >
                 <Accordion.Item eventKey="0">
                   <Accordion.Header>팀멤버</Accordion.Header>
                   <Accordion.Body>

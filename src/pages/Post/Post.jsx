@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import postService from "../../services/post.service";
 import "./Post.css";
+import { useSelector } from "react-redux";
 
 const Post = () => {
   const [posts, setPosts] = useState([]);
+  const navigate = useNavigate();
+  const currentUser = useSelector((state) => state.user);
 
   useEffect(() => {
     fetchPostList();
@@ -17,7 +20,12 @@ const Post = () => {
       setPosts(response.data);
       console.log(response.data);
     } catch (error) {
-      console.error("목록 가져오기 실패:", error);
+      if (currentUser == null) {
+        alert("로그인해주세요!");
+        navigate("/login");
+      } else {
+        console.error("목록 가져오기 실패:", error);
+      }
     }
   };
 
