@@ -4,6 +4,7 @@ import teamService from "../../services/team.service";
 import { useSelector } from "react-redux";
 import { Button, Image, Container, Row, Col, Accordion } from "react-bootstrap";
 import memberService from "../../services/member.service";
+import Together from "./Together";
 
 const TeamDetail = () => {
   const { teamId } = useParams();
@@ -142,6 +143,8 @@ const TeamDetail = () => {
           )}
         </Col>
       </Row>
+      {/* 모임 */}
+      <Together />
     </Container>
   );
 };
