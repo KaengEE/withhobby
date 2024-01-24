@@ -10,11 +10,6 @@ const Home = () => {
   const [teamList, setTeamList] = useState([]);
   const [postList, setPostList] = useState([]);
 
-  useEffect(() => {
-    fetchTeamList();
-    fetchPostList();
-  }, []);
-
   //팀리스트 가져오기
   const fetchTeamList = async () => {
     try {
@@ -30,12 +25,16 @@ const Home = () => {
   const fetchPostList = async () => {
     try {
       const response = await postService.getPostList();
-      const latestPosts = response.data.slice(0, 5); //5개가져오기
-      setPostList(latestPosts);
+      setPostList(response.data);
     } catch (error) {
       console.error("게시글 리스트를 가져오는데 오류 발생:", error);
     }
   };
+
+  useEffect(() => {
+    fetchTeamList();
+    fetchPostList();
+  }, []);
 
   return (
     <div className="container text-center">

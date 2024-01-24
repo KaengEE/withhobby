@@ -12,9 +12,7 @@ class PostService {
   }
   //게시글 목록
   getPostList() {
-    return axios.get(`${API_URL}/list`, {
-      headers: authHeader(),
-    });
+    return axios.get(`${API_URL}/list`);
   }
   // 게시글 상세조회
   getPostDetail(postId) {
