@@ -172,6 +172,11 @@ const Mypage = () => {
             <Button variant="primary" onClick={openModal}>
               프로필 수정
             </Button>
+            <Link to="/change/password">
+              <Button variant="primary" className="ms-1">
+                비밀번호 수정
+              </Button>
+            </Link>
           </Card.Body>
         </Card>
         {/* 내가 속해있는 팀 */}

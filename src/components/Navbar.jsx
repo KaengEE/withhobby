@@ -19,11 +19,11 @@ const Navbar = () => {
       <div className="container-fluid">
         <a className="navbar-brand" href="/">
           <img
-            src="/vite.svg"
+            src="/favicon.ico"
             alt="Logo"
             width="30"
-            height="24"
-            className="d-inline-block align-text-top"
+            height="30"
+            className="d-inline-block align-text-top me-1"
           />
           With Hobby
         </a>

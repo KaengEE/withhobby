@@ -23,6 +23,13 @@ class UserService {
       headers: authHeader(),
     });
   }
+
+  //비밀번호 변경
+  changePassword(password){
+    return axios.put(`${API_URL}/changePassword`,password,{
+      headers: authHeader(),
+    })
+  }
 }
 
 const userService = new UserService();
