@@ -177,37 +177,42 @@ const Mypage = () => {
         {/* 내가 속해있는 팀 */}
         <Card className="mt-5">
           <Card.Body>
-            <Card.Title className="card-title">나의 팀</Card.Title>
+            <Card.Title className="card-title">참여한 팀</Card.Title>
             <div className="row">
-              {myTeam.map((team, index) => (
-                <div key={team.id} className="col-md-4 mt-3">
-                  <Card style={{ height: "100%" }}>
-                    <Card.Img
-                      variant="top"
-                      src={team.teamImg}
-                      alt={`${team.teamname}`}
-                      className="myTeam-image"
-                    />
-                    <Card.Body>
-                      <Card.Title>{team.teamname}</Card.Title>
-                      <Card.Text>{team.teamTitle}</Card.Text>
-                      <Link to={`/team/detail/${team.id}`}>
-                        <Button variant="primary">바로가기</Button>
-                      </Link>
-                    </Card.Body>
-                  </Card>
-                </div>
-              ))}
+              {myTeam.length > 0 ? (
+                myTeam.map((team) => (
+                  <div key={team.id} className="col-md-4 mt-3">
+                    <Card style={{ height: "100%" }}>
+                      <Card.Img
+                        variant="top"
+                        src={team.teamImg}
+                        alt={`${team.teamname}`}
+                        className="myTeam-image"
+                      />
+                      <Card.Body>
+                        <Card.Title>{team.teamname}</Card.Title>
+                        <Card.Text>{team.teamTitle}</Card.Text>
+                        <Link to={`/team/detail/${team.id}`}>
+                          <Button variant="primary">바로가기</Button>
+                        </Link>
+                      </Card.Body>
+                    </Card>
+                  </div>
+                ))
+              ) : (
+                <p>내가 속한 팀이 없습니다.</p>
+              )}
             </div>
-            {!myTeam.length && <p>내가 속한 팀이 없습니다.</p>}
           </Card.Body>
         </Card>
-        {/* 나의모임 */}
+        {/* 나의 팀 */}
         <Card className="mt-5">
           <Card.Body>
-            <Card.Title>나의 모임</Card.Title>
+            <Card.Title>내가 생성한 팀</Card.Title>
             {hostTeam && (
-              <div className="team-info d-flex justify-content-center">
+              <div className="team-info d-flex justify-content-center flex-wrap">
+                {" "}
+                {/* flex-wrap 추가 */}
                 {/* 이미지 */}
                 {hostTeam.teamImg && (
                   <img
@@ -217,7 +222,9 @@ const Mypage = () => {
                   />
                 )}
                 {/* 팀 정보 */}
-                <div className="mt-5 ms-5">
+                <div className="mt-3 ms-3">
+                  {" "}
+                  {/* mt-5에서 mt-3으로 수정, ms-5에서 ms-3으로 수정 */}
                   <h5>{hostTeam.teamname}</h5>
                   <p>{hostTeam.teamTitle}</p>
                   {/* 바로가기 */}
@@ -263,7 +270,7 @@ const Mypage = () => {
             </Card.Body>
           </Card.Body>
         </Card>
-        {/* 내가 작성한 게시글 */}
+        {/* 나의 모임 */}
         <Card className="mt-5">
           <Card.Body>
             <Card.Title>나의 모임</Card.Title>
