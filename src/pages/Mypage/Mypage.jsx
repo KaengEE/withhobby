@@ -245,19 +245,21 @@ const Mypage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {myPost.map((post, index) => (
-                    <tr key={post.id}>
-                      <th scope="row">{index + 1}</th>
-                      <td>
-                        <Link to={`/post/detail/${post.id}`} className="link">
-                          {post.postTitle}
-                        </Link>
-                      </td>
-                      <td>{new Date(post.createAt).toLocaleDateString()}</td>
-                    </tr>
-                  ))}
+                  {myPost &&
+                    myPost.map((post, index) => (
+                      <tr key={post.id}>
+                        <th scope="row">{index + 1}</th>
+                        <td>
+                          <Link to={`/post/detail/${post.id}`} className="link">
+                            {post.postTitle}
+                          </Link>
+                        </td>
+                        <td>{new Date(post.createAt).toLocaleDateString()}</td>
+                      </tr>
+                    ))}
                 </tbody>
               </Table>
+              {!myPost && <p>내가 작성한 게시글이 없습니다.</p>}
             </Card.Body>
           </Card.Body>
         </Card>
@@ -278,24 +280,26 @@ const Mypage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {myTogether.map((together, index) => (
-                    <tr key={together.id}>
-                      <th scope="row">{index + 1}</th>
-                      <td>
-                        <Link
-                          to={`/team/detail/${together.team.id}`}
-                          className="link"
-                        >
-                          {together.title}
-                        </Link>
-                      </td>
-                      <td>{together.location}</td>
-                      <td>{new Date(together.date).toLocaleDateString()}</td>
-                      <td>{together.team.teamname}</td>
-                    </tr>
-                  ))}
+                  {myTogether &&
+                    myTogether.map((together, index) => (
+                      <tr key={together.id}>
+                        <th scope="row">{index + 1}</th>
+                        <td>
+                          <Link
+                            to={`/team/detail/${together.team.id}`}
+                            className="link"
+                          >
+                            {together.title}
+                          </Link>
+                        </td>
+                        <td>{together.location}</td>
+                        <td>{new Date(together.date).toLocaleDateString()}</td>
+                        <td>{together.team.teamname}</td>
+                      </tr>
+                    ))}
                 </tbody>
               </Table>
+              {!myTogether && <p>내가 참여한 모임이 없습니다.</p>}
             </Card.Body>
           </Card.Body>
         </Card>
