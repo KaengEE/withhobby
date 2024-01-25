@@ -30,6 +30,12 @@ class PostService {
       headers: authHeader(),
     });
   }
+  //유저별 게시글 조회
+  getUserPost(userId) {
+    return axios.get(`${API_URL}/list/${userId}`, {
+      headers: authHeader(),
+    });
+  }
 }
 
 const postService = new PostService();

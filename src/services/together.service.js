@@ -45,6 +45,13 @@ class TogetherService {
       headers: authHeader(),
     });
   }
+
+  //userId로 모임 조회
+  getUserTogether(userId) {
+    return axios.get(`${API_URL}/listByUserId/${userId}`, {
+      headers: authHeader(),
+    });
+  }
 }
 
 const togetherService = new TogetherService();

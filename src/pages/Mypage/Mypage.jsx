@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card } from "react-bootstrap";
+import { Button, Card, Table } from "react-bootstrap";
 import img from "../../assets/sample.jpg";
 import { useDispatch, useSelector } from "react-redux";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -10,6 +10,8 @@ import { storage } from "../../firebase";
 import { setCurrentUser } from "../../store/actions/user";
 import teamService from "../../services/team.service";
 import { Link } from "react-router-dom";
+import postService from "../../services/post.service";
+import togetherService from "../../services/together.service";
 
 const Mypage = () => {
   const currentUser = useSelector((state) => state.user); //현재유저
@@ -25,6 +27,10 @@ const Mypage = () => {
   const [hostTeam, setHostTeam] = useState();
   //myTeam
   const [myTeam, setMyTeam] = useState([]);
+  //myPost
+  const [myPost, setMyPost] = useState([]);
+  //myTogether
+  const [myTogether, setMyTogether] = useState([]);
 
   // 모달 상태 관리
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -43,6 +49,8 @@ const Mypage = () => {
     getUser(currentUser.id);
     getHostTeam(currentUser.id);
     getMyTeamList(currentUser.username);
+    getMyPost(currentUser.id);
+    getMyTogether(currentUser.id);
   }, []);
 
   //유저 가져오기
@@ -100,7 +108,25 @@ const Mypage = () => {
     }
   };
 
-  console.log(myTeam);
+  //내가 작성한 게시글
+  const getMyPost = async (userId) => {
+    try {
+      const response = await postService.getUserPost(userId);
+      setMyPost(response?.data);
+    } catch (error) {
+      console.error("나의 게시글 가져오기 실패:", error);
+    }
+  };
+
+  //내가 참여한 모임
+  const getMyTogether = async (userId) => {
+    try {
+      const response = await togetherService.getUserTogether(userId);
+      setMyTogether(response?.data);
+    } catch (error) {
+      console.error("나의 모임 가져오기 실패:", error);
+    }
+  };
 
   //프로필 수정
   const handleEdit = async () => {
@@ -208,11 +234,69 @@ const Mypage = () => {
         <Card className="mt-5">
           <Card.Body>
             <Card.Title>나의 게시글</Card.Title>
-            <Card.Text>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-              quam velit, vulputate eu pharetra nec, mattis ac neque. Duis
-              vulputate commodo lectus, ac blandit elit tincidunt id.
-            </Card.Text>
+            <Card.Body>
+              {/* 게시글 목록을 반복하여 표시 */}
+              <Table responsive>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>제목</th>
+                    <th>작성일</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {myPost.map((post, index) => (
+                    <tr key={post.id}>
+                      <th scope="row">{index + 1}</th>
+                      <td>
+                        <Link to={`/post/detail/${post.id}`} className="link">
+                          {post.postTitle}
+                        </Link>
+                      </td>
+                      <td>{new Date(post.createAt).toLocaleDateString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </Card.Body>
+          </Card.Body>
+        </Card>
+        {/* 내가 작성한 게시글 */}
+        <Card className="mt-5">
+          <Card.Body>
+            <Card.Title>나의 모임</Card.Title>
+            <Card.Body>
+              {/* 내가 가입한 모임 */}
+              <Table responsive>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>이름</th>
+                    <th>장소</th>
+                    <th>날짜</th>
+                    <th>팀명</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {myTogether.map((together, index) => (
+                    <tr key={together.id}>
+                      <th scope="row">{index + 1}</th>
+                      <td>
+                        <Link
+                          to={`/team/detail/${together.team.id}`}
+                          className="link"
+                        >
+                          {together.title}
+                        </Link>
+                      </td>
+                      <td>{together.location}</td>
+                      <td>{new Date(together.date).toLocaleDateString()}</td>
+                      <td>{together.team.teamname}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </Card.Body>
           </Card.Body>
         </Card>
       </div>
