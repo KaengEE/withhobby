@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, Card, Table } from "react-bootstrap";
-import img from "../../assets/sample.jpg";
-import { useDispatch, useSelector } from "react-redux";
+import img from "../../assets/sample.png";
+import { useSelector } from "react-redux";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import "./Mypage.css";
 import MypageModal from "./MypageModal";
