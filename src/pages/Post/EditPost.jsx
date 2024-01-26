@@ -16,7 +16,7 @@ const EditPost = () => {
         const response = await postService.getPostDetail(postId);
         const postData = response.data;
 
-        // Set the existing post data to the state
+        // 기존의 데이터 저장
         setPostTitle(postData.postTitle);
         setPostContent(postData.postText);
       } catch (error) {
