@@ -90,8 +90,8 @@ const Together = ({ teamId, hostId }) => {
             <th>설명</th>
             <th>날짜</th>
             {currentUser.id === hostId ? null : <th>신청</th>}
-            {currentUser.id === hostId ? <th>관리</th> : null}
             <th>멤버</th>
+            {currentUser.id === hostId ? <th>관리</th> : null}
           </tr>
         </thead>
         <tbody>
@@ -122,6 +122,16 @@ const Together = ({ teamId, hostId }) => {
               ) : null}
 
               <td>
+                {/* 멤버리스트 */}
+                <Button onClick={handleShow}>멤버</Button>
+                <TogetherMember
+                  show={showMemberList}
+                  handleClose={handleClose}
+                  togetherId={together.id}
+                />
+              </td>
+
+              <td>
                 {currentUser.id === hostId ? (
                   <>
                     <Button
@@ -138,15 +148,6 @@ const Together = ({ teamId, hostId }) => {
                     </Link>
                   </>
                 ) : null}
-              </td>
-              <td>
-                {/* 멤버리스트 */}
-                <Button onClick={handleShow}>멤버</Button>
-                <TogetherMember
-                  show={showMemberList}
-                  handleClose={handleClose}
-                  togetherId={together.id}
-                />
               </td>
             </tr>
           ))}
