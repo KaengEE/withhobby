@@ -21,7 +21,7 @@ const MypageModal = ({
         <Modal.Header closeButton>
           <Modal.Title>Profile 수정</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className="text-center">
           <label>
             프로필사진
             <div className="img">

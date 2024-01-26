@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button, Card } from "react-bootstrap";
-import img from "../../assets/sample.jpg";
+import img from "../../assets/sample.png";
 import teamService from "../../services/team.service";
 import { Link, useParams } from "react-router-dom";
 import categoryService from "../../services/category.service";
