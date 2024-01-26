@@ -3,22 +3,29 @@ import { Link, useNavigate } from "react-router-dom";
 import postService from "../../services/post.service";
 import "./Post.css";
 import { useSelector } from "react-redux";
+import ReactPaginate from "react-paginate";
 
 const Post = () => {
   const [posts, setPosts] = useState([]);
   const navigate = useNavigate();
   const currentUser = useSelector((state) => state.user);
+  //페이지네이션(react-pagination)
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     fetchPostList();
-  }, []);
+  }, [currentPage]);
 
   // 게시글 목록 가져오기
   const fetchPostList = async () => {
     try {
-      const response = await postService.getPostList();
+      const response = await postService.getPostList(currentPage + 1);
       setPosts(response.data);
       console.log(response.data);
+      // 배열의 길이를 사용하여 페이지 수 계산(5개씩)
+      setTotalPages(Math.ceil(response.data.length / 5));
+      console.log("페이지 수:", totalPages);
     } catch (error) {
       if (currentUser == null) {
         alert("로그인해주세요!");
@@ -27,6 +34,11 @@ const Post = () => {
         console.error("목록 가져오기 실패:", error);
       }
     }
+  };
+
+  //page 메서드
+  const handlePageChange = ({ selected }) => {
+    setCurrentPage(selected);
   };
 
   return (
@@ -44,18 +56,19 @@ const Post = () => {
         </thead>
         <tbody>
           {/* 게시글 목록을 반복하여 표시 */}
-          {posts.map((post) => (
-            <tr key={post.id}>
-              <th scope="row">{post.id}</th>
-              <td>
-                <Link to={`/post/detail/${post.id}`} className="link">
-                  {post.postTitle}
-                </Link>
-              </td>
-              <td>{post.user.username}</td>
-              <td>{new Date(post.createAt).toLocaleDateString()}</td>
-            </tr>
-          ))}
+          {posts &&
+            posts.map((post, index) => (
+              <tr key={post.id}>
+                <th scope="row">{index + 1}</th>
+                <td>
+                  <Link to={`/post/detail/${post.id}`} className="link">
+                    {post.postTitle}
+                  </Link>
+                </td>
+                <td>{post.user.username}</td>
+                <td>{new Date(post.createAt).toLocaleDateString()}</td>
+              </tr>
+            ))}
         </tbody>
       </table>
       <div className="text-end">
@@ -64,35 +77,23 @@ const Post = () => {
         </Link>
       </div>
       {/* 페이징 */}
-      <nav aria-label="Page navigation example">
-        <ul className="pagination justify-content-center">
-          <li className="page-item">
-            <a className="page-link" href="#">
-              Previous
-            </a>
-          </li>
-          <li className="page-item">
-            <a className="page-link" href="#">
-              1
-            </a>
-          </li>
-          <li className="page-item">
-            <a className="page-link" href="#">
-              2
-            </a>
-          </li>
-          <li className="page-item">
-            <a className="page-link" href="#">
-              3
-            </a>
-          </li>
-          <li className="page-item">
-            <a className="page-link" href="#">
-              Next
-            </a>
-          </li>
-        </ul>
-      </nav>
+      <ReactPaginate
+        pageCount={totalPages}
+        pageRangeDisplayed={5}
+        marginPagesDisplayed={2}
+        onPageChange={handlePageChange}
+        containerClassName="pagination justify-content-center"
+        pageClassName="page-item"
+        breakClassName="page-item"
+        previousClassName="page-item"
+        nextClassName="page-item"
+        pageLinkClassName="page-link"
+        breakLinkClassName="page-link"
+        previousLinkClassName="page-link"
+        nextLinkClassName="page-link"
+        activeClassName="active"
+        initialPage={currentPage}
+      />
     </div>
   );
 };
