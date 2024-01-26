@@ -50,10 +50,7 @@ const Together = ({ teamId, hostId }) => {
 
   const joinTogether = async (togetherId) => {
     try {
-      const response = await togetherMemberService.joinTogether(
-        teamId,
-        togetherId
-      );
+      await togetherMemberService.joinTogether(teamId, togetherId);
       alert("참가완료!");
       fetchData(); // 수정: 리스트 다시 불러오기
     } catch (error) {
