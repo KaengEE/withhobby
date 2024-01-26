@@ -49,9 +49,17 @@ const Together = ({ teamId, hostId }) => {
   };
 
   const joinTogether = async (togetherId) => {
-    await togetherMemberService.joinTogether(teamId, togetherId);
-    alert("참가완료!");
-    fetchData(); // 수정: 리스트 다시 불러오기
+    try {
+      const response = await togetherMemberService.joinTogether(
+        teamId,
+        togetherId
+      );
+      alert("참가완료!");
+      fetchData(); // 수정: 리스트 다시 불러오기
+    } catch (error) {
+      console.error("Error:", error.message);
+      alert("해당 팀의 팀원만 신청 가능합니다.");
+    }
   };
 
   const cancelTogether = async (togetherId) => {
