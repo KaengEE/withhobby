@@ -3,10 +3,8 @@ import { Form, Button } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import teamService from "../../services/team.service";
-import Team from "../../models/Team";
 import { storage } from "../../firebase";
 import categoryService from "../../services/category.service";
-import { useSelector } from "react-redux";
 import TeamForm from "../../models/TeamForm";
 
 const EditTeam = () => {
@@ -71,11 +69,6 @@ const EditTeam = () => {
         const result = await uploadBytes(locationRef, file);
         teamImg = await getDownloadURL(result.ref);
       }
-
-      console.log(teamName);
-      console.log(teamTitle);
-      console.log(teamImg);
-      console.log(category.category);
 
       const updatedTeam = new TeamForm(
         teamName,
