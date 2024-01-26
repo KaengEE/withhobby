@@ -7,9 +7,9 @@ import ReactPaginate from "react-paginate";
 
 const Post = () => {
   const [posts, setPosts] = useState([]);
+  const [postsToDisplay, setPostsToDisplay] = useState([]); //화면에 보이는 posts
   const navigate = useNavigate();
   const currentUser = useSelector((state) => state.user);
-  //페이지네이션(react-pagination)
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
 
@@ -17,15 +17,26 @@ const Post = () => {
     fetchPostList();
   }, [currentPage]);
 
-  // 게시글 목록 가져오기
   const fetchPostList = async () => {
     try {
       const response = await postService.getPostList(currentPage + 1);
-      setPosts(response.data);
-      console.log(response.data);
-      // 배열의 길이를 사용하여 페이지 수 계산(5개씩)
-      setTotalPages(Math.ceil(response.data.length / 5));
-      console.log("페이지 수:", totalPages);
+      const sortedPosts = response.data.sort((a, b) => a.createAt - b.createAt);
+      setPosts(sortedPosts);
+
+      const totalPostsCount = response.data.length;
+      const postsPerPage = 5;
+
+      // 시작과 끝 index
+      const startIndex = currentPage * postsPerPage;
+      const endIndex = startIndex + postsPerPage;
+
+      const postsSubset = sortedPosts.slice(startIndex, endIndex);
+
+      // 잘린 만큼 보여주기
+      setPostsToDisplay(postsSubset);
+
+      const totalPagesCount = Math.ceil(totalPostsCount / postsPerPage);
+      setTotalPages(totalPagesCount);
     } catch (error) {
       if (currentUser == null) {
         alert("로그인해주세요!");
@@ -36,7 +47,6 @@ const Post = () => {
     }
   };
 
-  //page 메서드
   const handlePageChange = ({ selected }) => {
     setCurrentPage(selected);
   };
@@ -55,11 +65,10 @@ const Post = () => {
           </tr>
         </thead>
         <tbody>
-          {/* 게시글 목록을 반복하여 표시 */}
-          {posts &&
-            posts.map((post, index) => (
+          {postsToDisplay &&
+            postsToDisplay.map((post, index) => (
               <tr key={post.id}>
-                <th scope="row">{index + 1}</th>
+                <th scope="row">{index + 1 + currentPage * 5}</th>
                 <td>
                   <Link to={`/post/detail/${post.id}`} className="link">
                     {post.postTitle}
@@ -76,10 +85,9 @@ const Post = () => {
           글쓰기
         </Link>
       </div>
-      {/* 페이징 */}
       <ReactPaginate
         pageCount={totalPages}
-        pageRangeDisplayed={5}
+        pageRangeDisplayed={4}
         marginPagesDisplayed={2}
         onPageChange={handlePageChange}
         containerClassName="pagination justify-content-center"
