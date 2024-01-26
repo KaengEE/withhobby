@@ -20,7 +20,8 @@ const Post = () => {
   const fetchPostList = async () => {
     try {
       const response = await postService.getPostList(currentPage + 1);
-      const sortedPosts = response.data.sort((a, b) => a.createAt - b.createAt);
+      console.log(response.data);
+      const sortedPosts = response.data.sort((a, b) => b.id - a.id);
       setPosts(sortedPosts);
 
       const totalPostsCount = response.data.length;
