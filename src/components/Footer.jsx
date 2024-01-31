@@ -8,10 +8,10 @@ const Footer = () => {
         <Row>
           <Col className="text-center">
             <p>© 2024 KaengEE. All rights reserved.</p>
-            <a href="" className="btn btn-outline-dark me-3">
+            <a href="https://github.com/KaengEE/withhobby" target="_blank" className="btn btn-outline-dark me-3">
               GitHub
             </a>
-            <a href="" className="btn btn-outline-success">
+            <a href="https://drive.google.com/file/d/1aiIymoxbxMPnyiAbkjHHKUJqIuZtBJn_/view" target="_blank" className="btn btn-outline-success">
               Portfolio
             </a>
           </Col>
