@@ -10,6 +10,8 @@ Spring Boot + React 프로젝트
 
 마이페이지에서 자신의 활동을 전반적으로 확인 할 수 있도록 함.
 
+<a href="https://github.com/KaengEE/withhobby-backend">백엔드 서버</a>
+
 ## 🛠 Stacks
 
 - Spring boot
