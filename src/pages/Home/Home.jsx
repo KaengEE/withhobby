@@ -55,6 +55,7 @@ const Home = () => {
                 <Card className="mb-3">
                   <Card.Img
                     variant="top"
+                    className="card-img"
                     src={team.teamImg}
                     alt={team.teamname}
                   />
@@ -62,7 +63,7 @@ const Home = () => {
                     <Card.Title>{team.teamname}</Card.Title>
                     <Card.Text>{team.teamTitle}</Card.Text>
                     <Link to={`/team/detail/${team.id}`}>
-                      <Button variant="primary">자세히 보기</Button>
+                      <Button variant="primary" className="detail-btn">자세히 보기</Button>
                     </Link>
                   </Card.Body>
                 </Card>
