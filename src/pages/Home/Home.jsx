@@ -3,12 +3,13 @@ import banner from "../../assets/banner.gif";
 import "./Home.css";
 import { Link } from "react-router-dom";
 import teamService from "../../services/team.service";
-import { Button, Card, Col, Row } from "react-bootstrap";
+import { Button, Card, Col, Modal, Row } from "react-bootstrap";
 import postService from "../../services/post.service";
 
 const Home = () => {
   const [teamList, setTeamList] = useState([]);
   const [postList, setPostList] = useState([]);
+  const [showModal, setShowModal] = useState(true); //모달 상태 추가
 
   //팀리스트 가져오기
   const fetchTeamList = async () => {
@@ -35,10 +36,29 @@ const Home = () => {
   useEffect(() => {
     fetchTeamList();
     fetchPostList();
+
+    //모달창 추가(10초)
+    const timeout = setTimeout(() => {
+      setShowModal(false);
+    }, 10000);
+
+    return () => clearTimeout(timeout);
   }, []);
 
   return (
     <div className="container text-center">
+      {/* 모달창 */}
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>페이지 안내</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>무료 서버를 사용해서 데이터 불러오는데 1분 소요됩니다.<br/>
+          관리자 아이디 hong 비밀번호 1234<br/>
+          유저 아이디 peng 비밀번호 1234
+          </p>
+        </Modal.Body>
+      </Modal>
       <div className="position-relative">
         <img src={banner} alt="Banner" className="banner-image" />
         <Link to="/category" className="btn btn-on-image">
