@@ -14,16 +14,12 @@ const TeamDetail = () => {
   const [member, setMember] = useState([]);
   const [teamHost, setTeamHost] = useState();
 
-
-  //비회원 유저 접근시 로그인 페이지로
   useEffect(() => {
     if (!currentUser) {
-      alert("로그인 해주세요!");
-      navigate("/login");
+      navigate('/login');
     }
   }, [currentUser, navigate]);
 
-  
   const fetchMemberList = async () => {
     try {
       const response = await memberService.getMember(teamId);
@@ -84,6 +80,11 @@ const TeamDetail = () => {
       }
     }
   };
+
+  if (!team || !teamHost) {
+    alert("로그인 해주세요!");
+    return null;
+  }
 
   return (
     <Container>
