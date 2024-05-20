@@ -50,11 +50,10 @@ const Home = () => {
       {/* 모달창 */}
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>페이지 안내</Modal.Title>
+          <Modal.Title>죄송합니다</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>죄송합니다.<br/>
-          무료 서버를 사용해서 데이터 불러오는데 약 1분~2분 소요됩니다.<br/>
+          <p>무료 서버를 사용해서 데이터 불러오는데 약 2분 소요됩니다.<br/>
           관리자 아이디 hong 비밀번호 1234<br/>
           유저 아이디 peng 비밀번호 1234
           </p>
@@ -85,8 +84,7 @@ const Home = () => {
                     <Card.Text>{team.teamTitle}</Card.Text>
                     <Link to={`/team/detail/${team.id}`}>
                       <Button variant="primary" className="detail-btn">자세히 보기</Button>
-                    </Link>
-                  </Card.Body>
+                    </Link>                  </Card.Body>
                 </Card>
               </Col>
             ))}
