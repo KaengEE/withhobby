@@ -14,6 +14,12 @@ const TeamDetail = () => {
   const [member, setMember] = useState([]);
   const [teamHost, setTeamHost] = useState();
 
+  //비회원 유저 접근시
+  if(!currentUser){
+    alert("로그인 해주세요!");
+    return null;
+  }
+
   const fetchMemberList = async () => {
     try {
       const response = await memberService.getMember(teamId);
