@@ -14,12 +14,6 @@ const TeamDetail = () => {
   const [member, setMember] = useState([]);
   const [teamHost, setTeamHost] = useState();
 
-  useEffect(() => {
-    if (!currentUser) {
-      navigate('/login');
-    }
-  }, [currentUser, navigate]);
-
   const fetchMemberList = async () => {
     try {
       const response = await memberService.getMember(teamId);
@@ -40,10 +34,31 @@ const TeamDetail = () => {
         console.error("팀 정보를 불러오는데 오류 발생:", error);
       }
     };
+  
+    const fetchMemberList = async () => {
+      try {
+        const response = await memberService.getMember(teamId);
+        setMember(response.data);
+      } catch (error) {
+        console.error("팀 멤버를 불러오는데 오류 발생:", error);
+      }
+    };
+  
+    //console.log(currentUser);
 
-    fetchTeamDetail();
+    if (!currentUser) {
+      navigate('/login');
+      return;
+    }
+  
+    // 로그인되어있을때도 alert 생성되어서
+    // 로그인되어있고 team정보가 없을때 함수 호출
+    if (currentUser && !team) {
+      fetchTeamDetail();
+    }
+  
     fetchMemberList();
-  }, [teamId]);
+  }, [currentUser, navigate, team, teamId]);
 
   const handleJoinTeam = async () => {
     try {
@@ -81,8 +96,11 @@ const TeamDetail = () => {
     }
   };
 
+
   if (!team || !teamHost) {
-    alert("로그인 해주세요!");
+    if (!currentUser) {
+      alert("로그인 해주세요!");
+    }
     return null;
   }
 
