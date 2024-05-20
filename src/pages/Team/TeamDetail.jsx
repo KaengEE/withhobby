@@ -14,14 +14,23 @@ const TeamDetail = () => {
   const [member, setMember] = useState([]);
   const [teamHost, setTeamHost] = useState();
 
-  useEffect(() => {
-    // 비회원 유저 접근 시 로그인 페이지로 이동
-    if (!currentUser) {
-      alert("로그인 해주세요!");
-      navigate("/login");
-      return;
-    }
+  //비회원 유저 접근시 로그인 페이지로
+  if(!currentUser){
+    alert("로그인 해주세요!");
+    navigate("/login");
+    return;
+  }
 
+  const fetchMemberList = async () => {
+    try {
+      const response = await memberService.getMember(teamId);
+      setMember(response.data);
+    } catch (error) {
+      console.error("팀 멤버를 불러오는데 오류 발생:", error);
+    }
+  };
+
+  useEffect(() => {
     const fetchTeamDetail = async () => {
       try {
         const response = await teamService.getTeamDetail(teamId);
@@ -33,18 +42,9 @@ const TeamDetail = () => {
       }
     };
 
-    const fetchMemberList = async () => {
-      try {
-        const response = await memberService.getMember(teamId);
-        setMember(response.data);
-      } catch (error) {
-        console.error("팀 멤버를 불러오는데 오류 발생:", error);
-      }
-    };
-
     fetchTeamDetail();
     fetchMemberList();
-  }, [teamId, currentUser, navigate]);
+  }, [teamId]);
 
   const handleJoinTeam = async () => {
     try {
