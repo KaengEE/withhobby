@@ -1,5 +1,6 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
+import { NavLink } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -16,6 +17,11 @@ const Footer = () => {
             </a>
           </Col>
         </Row>
+        <p className="text-center p-3">
+        <NavLink to="/admin" className="nav-link">
+                  관리자페이지
+        </NavLink>
+        </p>
       </Container>
     </footer>
   );

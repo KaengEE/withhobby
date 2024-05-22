@@ -5,6 +5,12 @@ import { authHeader } from "./base.service";
 const API_URL = BASE_API_URL + "/api/user";
 
 class UserService {
+
+  //전체 유저 리스트
+  getUserList(){
+    return axios.get(`${API_URL}/list`);
+  }
+
   //권한 변경
   changeRole(role) {
     return axios.put(

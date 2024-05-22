@@ -22,6 +22,7 @@ import EditTogether from "./pages/Together/EditTogether";
 import TogetherMember from "./pages/Together/TogetherMember";
 import Footer from "./components/Footer";
 import ChangePassword from "./pages/Mypage/ChangePassword";
+import UsersList from "./pages/Admin/UsersList";
 
 function App() {
   return (
@@ -59,7 +60,8 @@ function App() {
               element={<TogetherMember />}
             />
             <Route path="/change/password" element={<ChangePassword />} />
-
+            <Route path="/admin" element={<UsersList />}/>
+            
             {/* 오류 주소 */}
             <Route path="/404" element={<NotFound />} />
             <Route path="/401" element={<UnAuthorized />} />
