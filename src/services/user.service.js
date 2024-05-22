@@ -6,19 +6,22 @@ const API_URL = BASE_API_URL + "/api/user";
 
 class UserService {
 
+
   //전체 유저 리스트
   getUserList(){
     return axios.get(`${API_URL}/list`);
   }
+  
 
   //권한 변경
-  changeRole(role) {
+  changeRole(username, role) {
     return axios.put(
-      API_URL + "/change/" + role,
+      `${API_URL}/change/${username}/${role}`,
       {},
       { headers: authHeader() }
     );
   }
+
   // 프로필수정
   updateProfile(user) {
     return axios.put(`${API_URL}/profile`, user, { headers: authHeader() });
